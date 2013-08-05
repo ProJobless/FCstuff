@@ -18,33 +18,33 @@ Configurations
 
 * Make a copy of database.default.php as database.php
 
-* Change the following settings:
+* Change the following settings -
 
-    + The hostname of your database server.
+    + The hostname of your database server. Example:
 
         ```php
         $db['default']['hostname'] = 'localhost';
         ```
 
-    + The username used to connect to the database.
+    + The username used to connect to the database. Example:
 
         ````php
         $db['default']['username'] = 'root';
         ````
 
-    + The password used to connect to the database.
+    + The password used to connect to the database. Example:
 
         ```php
         $db['default']['password'] = 'root';
         ```
 
-    + The name of the database you want to connect to.
+    + The name of the database you want to connect to. Example:
 
         ```php
         $db['default']['database'] = 'fcstuff';
         ```
 
-    + The database type.
+    + The database type. Example:
 
         ```php
         $db['default']['dbdriver'] = 'mysql';
@@ -54,15 +54,15 @@ Configurations
 
 * Make a copy of project.default.php as project.php
 
-* Change the following settings:
+* Change the following settings -
 
-    + The website url.
+    + The website url. Example:
 
         ```php
         $config['base_url'] = 'http://fcstuff.com/';
         ```
 
-    + The threshhold for logging error messages.
+    + The threshhold for logging error messages. Example:
 
         ```php
         $config['log_threshold'] = 0;
