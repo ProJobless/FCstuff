@@ -68,6 +68,10 @@ Configurations
         $config['log_threshold'] = 0;
         ```
 
+###Database Migrations
+
+* Run the migration script by visiting http://base_url/migrations/
+
 License
 -------
 
