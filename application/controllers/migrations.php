@@ -4,16 +4,16 @@
  * MIGRATIONS CONTROLLER
  *
  * @package    FCstuff
+ * @category   Database
  * @author     Abhijit Parida
  * @copyright  Copyright (c) 2013, FCstuff
  */
 class Migrations extends CI_Controller {
 
     /**
-     * Constructor.
+     * Constructor
      *
      * @access  public
-     * @return  void
      */
     public function __construct()
     {
@@ -29,7 +29,6 @@ class Migrations extends CI_Controller {
      * Migrate to the latest version.
      *
      * @access  public
-     * @return  void
      */
     public function index()
     {
@@ -52,7 +51,6 @@ class Migrations extends CI_Controller {
      * Rollback all migrations.
      *
      * @access  public
-     * @return  void
      */
     public function rollback()
     {
