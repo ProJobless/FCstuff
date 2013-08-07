@@ -31,7 +31,7 @@ class Captcha extends CI_Controller {
         imagefill($image, 0, 0, $back);
 
         // Add captcha text.
-        $font = 'application/assets/fonts/captcha.ttf';
+        $font = 'assets/fonts/captcha.ttf';
         $color = imagecolorallocate($image, 39, 97, 155);
         imagettftext($image, 40, 0, 5, 40, $color, $font, $text);
 
