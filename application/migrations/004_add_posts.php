@@ -22,7 +22,12 @@ class Migration_Add_posts extends CI_Migration {
             "user_id INT(10)",
             "content TEXT",
             "image VARCHAR(100)",
-            "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+            "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+            "modified BOOLEAN DEFAULT FALSE",
+            "last_modified_timestamp TIMESTAMP",
+            "last_comment_timestamp TIMESTAMP",
+            "rating_score INT(10)",
+            "rating_count INT(10)"
         ));
 
         $this->dbforge->add_key('post_id', TRUE);
