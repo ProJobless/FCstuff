@@ -31,7 +31,11 @@ class Migration_Add_users extends CI_Migration {
             "recovery_key VARCHAR(32)",
             "birthday DATE",
             "about VARCHAR(500)",
-            "gender VARCHAR(1)"
+            "gender VARCHAR(1)",
+            "profile_picture VARCHAR(32)",
+            "last_seen TIMESTAMP",
+            "last_ip_address VARCHAR(15)",
+            "last_user_agent VARCHAR(300)"
         ));
 
         $this->dbforge->add_key('user_id', TRUE);
