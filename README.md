@@ -6,8 +6,8 @@ An experimental social-networking website built on CodeIgniter.
 Requirements
 ------------
 
-* PHP version 5.1.6 or newer.
-* A mysql, mysqli, postgre, odbc, mssql, sqlite or oci8 database.
+* PHP version 5.3 or newer.
+* Mysql, mysqli, postgre, odbc, mssql, sqlite or oci8 database.
 
 Configurations
 --------------
