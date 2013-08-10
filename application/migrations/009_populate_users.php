@@ -45,7 +45,8 @@ class Migration_Populate_users extends CI_Migration {
         $data['email']           = 'admin@localhost';
         $data['password']        = $this->phpass->hash('admin');
         $data['name']            = 'Awesome Admin';
-        $data['reputation']       = rand(0, 1000);
+        $data['reputation']      = rand(0, 1000);
+        $data['about']           = 'I am the awesome admin!';
         $data['type']            = 'admin';
         $data['verified']        = TRUE;
         $data['profile_picture'] = generate_profile_picture(1);
@@ -68,7 +69,7 @@ class Migration_Populate_users extends CI_Migration {
             $data['username']        = 'user' . $i;
             $data['email']           = 'user' . $i . '@localhost';
             $data['name']            = 'Fname' . $i . ' Lname' . $i;
-            $data['reputation']       = rand(0, 1000);
+            $data['reputation']      = rand(0, 1000);
             $data['about']           = 'Hello! I am user' . $i . '!';
             $data['profile_picture'] = generate_profile_picture($i);
 
