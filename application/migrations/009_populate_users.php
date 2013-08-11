@@ -53,6 +53,8 @@ class Migration_Populate_users extends CI_Migration {
 
         $this->db->insert('users', $data);
 
+        unset($data['type']);
+
         // -------------------------
         // Create 5 normal users
         // -------------------------
