@@ -78,6 +78,18 @@ class Migration_Populate_users extends CI_Migration {
 
             $this->db->insert('users', $data);
         }
+
+        // -------------------------
+        // Ban 2 users
+        // -------------------------
+
+        for ($i = 5; $i <= 6 ; $i++)
+        {
+            $this->db->where('user_id', $i);
+            $this->db->set('banned', TRUE);
+            $this->db->set('ban_expire', 'NOW() + INTERVAL 1 HOUR', FALSE);
+            $this->db->update('users');
+        }
     }
 
     // --------------------------------------------------------------------
