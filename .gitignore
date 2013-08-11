@@ -13,3 +13,5 @@ application/config/project.php
 
 user-content/*
 !user-content/index.html
+
+*debug*
