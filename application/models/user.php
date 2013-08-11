@@ -6,6 +6,7 @@
  * @package    FCstuff
  * @category   User
  * @author     Abhijit Parida
+ * @license    The MIT License (MIT)
  * @copyright  Copyright (c) 2013, FCstuff
  */
 

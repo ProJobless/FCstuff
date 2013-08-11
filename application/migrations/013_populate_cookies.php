@@ -6,6 +6,7 @@
  * @package    FCstuff
  * @category   Database
  * @author     Abhijit Parida
+ * @license    The MIT License (MIT)
  * @copyright  Copyright (c) 2013, FCstuff
  */
 class Migration_Populate_cookies extends CI_Migration {
