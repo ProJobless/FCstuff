@@ -29,7 +29,7 @@ class Migration_Populate_logs extends CI_Migration {
                 $this->db->insert('logs', array(
                     'user_id'    => $j,
                     'controller' => 'Example Controller',
-                    'view'       => 'Example View',
+                    'method'     => 'Example Method',
                     'ip_address' => $ip_address,
                     'user_agent' => $user_agent
                 ));

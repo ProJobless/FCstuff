@@ -22,7 +22,7 @@ class Migration_Add_logs extends CI_Migration {
             "sl INT(10) NOT NULL AUTO_INCREMENT",
             "user_id INT(10)",
             "controller VARCHAR(30)",
-            "view VARCHAR(30)",
+            "method VARCHAR(30)",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
             "ip_address VARCHAR(15)",
             "user_agent VARCHAR(300)"
