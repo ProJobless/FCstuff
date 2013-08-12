@@ -18,17 +18,13 @@ class Migration_Populate_ban extends CI_Migration {
      */
     public function up()
     {
-        // User_id
-        for ($i = 5; $i <= 6 ; $i++)
-        {
-            $data = array(
-                'user_id'   => $i,
-                'offence'   => 'Sample banning.',
-                'initiator' => 'Admin'
-            );
-            $this->db->set('expire', 'NOW() + INTERVAL 1 HOUR', FALSE);
-            $this->db->insert('ban', $data);
-        }
+        $data = array(
+            'user_id'   => 5,
+            'offence'   => 'Sample banning.',
+            'initiator' => 'Admin'
+        );
+        $this->db->set('expire', 'NOW() + INTERVAL 1 HOUR', FALSE);
+        $this->db->insert('ban', $data);
     }
 
     // --------------------------------------------------------------------
