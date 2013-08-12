@@ -30,8 +30,6 @@ class Migration_Populate_users extends CI_Migration {
         $data['birthday']         = date('Y-m-d H:i:s', strtotime("-18 year"));
         $data['gender']           = 'm';
         $data['last_seen']        = date('Y-m-d H:i:s');
-        $data['last_ip_address']  = $this->session->userdata('ip_address');
-        $data['last_user_agent']  = $this->session->userdata('user_agent');
 
         // -------------------------
         // Create admin user
@@ -80,16 +78,23 @@ class Migration_Populate_users extends CI_Migration {
         }
 
         // -------------------------
-        // Ban 2 users
+        // Ban 1 user
         // -------------------------
+        $this->db->where('user_id', 5);
+        $this->db->set('type', 'banned');
+        $this->db->update('users');
 
-        for ($i = 5; $i <= 6 ; $i++)
-        {
-            $this->db->where('user_id', $i);
-            $this->db->set('banned', TRUE);
-            $this->db->set('ban_expire', 'NOW() + INTERVAL 1 HOUR', FALSE);
-            $this->db->update('users');
-        }
+        // -------------------------
+        // Delete 1 user
+        // -------------------------
+        $this->db->where('user_id', 6);
+        $this->db->set('type', 'deleted');
+        $this->db->update('users');
+
+        $this->load->helper('file');
+
+        delete_files('user-content/6/');
+
     }
 
     // --------------------------------------------------------------------

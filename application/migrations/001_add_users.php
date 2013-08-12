@@ -34,11 +34,7 @@ class Migration_Add_users extends CI_Migration {
             "about VARCHAR(500)",
             "gender VARCHAR(1)",
             "profile_picture VARCHAR(32)",
-            "last_seen TIMESTAMP",
-            "last_ip_address VARCHAR(15)",
-            "last_user_agent VARCHAR(300)",
-            "banned BOOLEAN DEFAULT FALSE",
-            "ban_expire TIMESTAMP"
+            "last_seen TIMESTAMP"
         ));
 
         $this->dbforge->add_key('user_id', TRUE);
