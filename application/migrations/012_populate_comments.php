@@ -27,9 +27,9 @@ class Migration_Populate_comments extends CI_Migration {
                 // Users
                 for ($k = 2; $k <= 6; $k++)
                 {
-                    $content = "This is comment $j by user $k on post $i.";
+                    $content = "This is a comment by user $k on post $i.";
                     $this->db->insert('comments', array(
-                        'post_id'   => $j,
+                        'post_id'   => $i,
                         'user_id'   => $k,
                         'content'   => $content,
                         'rating_score' => rand(200, 500),
