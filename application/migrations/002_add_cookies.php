@@ -19,6 +19,7 @@ class Migration_Add_cookies extends CI_Migration {
     public function up()
     {
         $this->dbforge->add_field(array(
+            "cookie_id INT(10) NOT NULL AUTO_INCREMENT",
             "user_id INT(10)",
             "token VARCHAR(32)",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
@@ -26,6 +27,8 @@ class Migration_Add_cookies extends CI_Migration {
             "user_agent VARCHAR(300)"
         ));
 
+        $this->dbforge->add_key('cookie_id', TRUE);
+        $this->dbforge->add_key('user_id');
         $this->dbforge->add_key('token');
 
         $this->dbforge->create_table('cookies');
