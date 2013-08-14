@@ -31,6 +31,7 @@ class Rating extends CI_Model {
      * @access   public
      * @param    string
      * @param    int
+     * @return   array
      */
     public function read($content_type, $content_id)
     {
