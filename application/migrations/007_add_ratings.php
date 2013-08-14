@@ -19,6 +19,7 @@ class Migration_Add_ratings extends CI_Migration {
     public function up()
     {
         $this->dbforge->add_field(array(
+            "rating_id INT(10) NOT NULL AUTO_INCREMENT",
             "content_id INT(10)",
             "type VARCHAR(7)",
             "user_id INT(10)",
@@ -26,7 +27,9 @@ class Migration_Add_ratings extends CI_Migration {
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
         ));
 
+        $this->dbforge->add_key('rating_id', TRUE);
         $this->dbforge->add_key('content_id');
+        $this->dbforge->add_key('user_id');
 
         $this->dbforge->create_table('ratings');
     }
