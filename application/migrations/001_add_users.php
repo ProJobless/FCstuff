@@ -27,7 +27,6 @@ class Migration_Add_users extends CI_Migration {
             "reputation INT(10) DEFAULT '0' ",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
             "type VARCHAR(20) DEFAULT 'standard' ",
-            "verified BOOLEAN DEFAULT FALSE",
             "verification_key VARCHAR(32)",
             "recovery_key VARCHAR(32)",
             "birthday DATE",
@@ -39,6 +38,8 @@ class Migration_Add_users extends CI_Migration {
 
         $this->dbforge->add_key('user_id', TRUE);
         $this->dbforge->add_key('username');
+        $this->dbforge->add_key('email');
+        $this->dbforge->add_key('name');
 
         $this->dbforge->create_table('users');
     }

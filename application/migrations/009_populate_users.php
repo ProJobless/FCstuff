@@ -25,7 +25,6 @@ class Migration_Populate_users extends CI_Migration {
         // Common values
         // -------------------------
 
-        $data['verification_key'] = md5(rand());
         $data['recovery_key']     = md5(rand());
         $data['birthday']         = date('Y-m-d H:i:s', strtotime("-18 year"));
         $data['gender']           = 'm';
@@ -40,15 +39,15 @@ class Migration_Populate_users extends CI_Migration {
             mkdir('user-content/1', 0777, TRUE);
         }
 
-        $data['username']        = 'admin';
-        $data['email']           = 'admin@localhost';
-        $data['password']        = $this->phpass->hash('admin');
-        $data['name']            = 'Awesome Admin';
-        $data['reputation']      = rand(0, 1000);
-        $data['about']           = 'I am the awesome admin!';
-        $data['type']            = 'admin';
-        $data['verified']        = TRUE;
-        $data['profile_picture'] = generate_profile_picture(1);
+        $data['username']         = 'admin';
+        $data['email']            = 'admin@localhost';
+        $data['password']         = $this->phpass->hash('admin');
+        $data['name']             = 'Awesome Admin';
+        $data['reputation']       = rand(0, 1000);
+        $data['about']            = 'I am the awesome admin!';
+        $data['type']             = 'admin';
+        $data['profile_picture']  = generate_profile_picture(1);
+        $data['verification_key'] = '';
 
         $this->db->insert('users', $data);
 
@@ -58,7 +57,8 @@ class Migration_Populate_users extends CI_Migration {
         // Create 5 normal users
         // -------------------------
 
-        $data['password']        = $this->phpass->hash('pass');
+        $data['password'] = $this->phpass->hash('pass');
+        $data['verification_key'] = md5(rand());
 
         for ($i = 2; $i <= 6; $i++)
         {
@@ -78,15 +78,25 @@ class Migration_Populate_users extends CI_Migration {
         }
 
         // -------------------------
-        // Ban 1 user
+        // Verify User 4
         // -------------------------
+
+        $this->db->where('user_id', 4);
+        $this->db->set('verification_key', '');
+        $this->db->update('users');
+
+        // -------------------------
+        // Ban User 5
+        // -------------------------
+
         $this->db->where('user_id', 5);
         $this->db->set('type', 'banned');
         $this->db->update('users');
 
         // -------------------------
-        // Delete 1 user
+        // Delete User 6
         // -------------------------
+
         $this->db->where('user_id', 6);
         $this->db->set('type', 'deleted');
         $this->db->update('users');
@@ -100,7 +110,7 @@ class Migration_Populate_users extends CI_Migration {
     // --------------------------------------------------------------------
 
     /**
-     * Empty 'users' table and delete user content.
+     * Rollback changes.
      *
      * @access  public
      */
