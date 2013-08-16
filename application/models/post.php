@@ -46,21 +46,23 @@ class Post extends CI_Model {
    // --------------------------------------------------------------------
 
     /**
-     * Return posts made by an user.
+     * Return posts made by a user.
      *
      * @access   public
      * @param    int
      * @param    int
-     * @param    int
      * @return   array
      */
-    public function user($user_id, $limit = 5, $offset = 0)
+    public function user($user_id, $last_post_id = FALSE)
     {
         $this->db->from('posts');
-        $this->db->select('');
+        $this->db->select();
         $this->db->order_by('post_id', 'desc');
-        $this->db->limit($limit, $offset);
+        $this->db->limit(15);
         $this->db->where('user_id', $user_id);
+        if ($last_post_id) {
+            $this->db->where('post_id <', $last_post_id);
+        }
         $query = $this->db->get();
 
         return $query->result_array();
@@ -73,15 +75,17 @@ class Post extends CI_Model {
      *
      * @access   public
      * @param    int
-     * @param    int
      * @return   array
      */
-    public function feed($limit = 15, $offset = 0)
+    public function feed($last_post_id = FALSE)
     {
         $this->db->from('posts');
         $this->db->select('');
         $this->db->order_by('post_id', 'desc');
-        $this->db->limit($limit, $offset);
+        $this->db->limit(15);
+        if ($last_post_id) {
+            $this->db->where('post_id <', $last_post_id);
+        }
         $query = $this->db->get();
 
         return $query->result_array();
