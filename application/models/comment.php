@@ -31,15 +31,17 @@ class Comment extends CI_Model {
      * @access   public
      * @param    int
      * @param    int
-     * @param    int
      * @return   array
      */
-    public function read($post_id, $limit = 15, $offset = 0)
+    public function read($post_id, $last_comment_id = FALSE)
     {
         $this->db->from('comments');
         $this->db->select('');
-        $this->db->limit($limit, $offset);
+        $this->db->limit(15);
         $this->db->where('post_id', $post_id);
+        if ($last_comment_id) {
+            $this->db->where('comment_id <', $last_comment_id);
+        }
         $this->db->order_by('comment_id', 'desc');
         $query = $this->db->get();
 
