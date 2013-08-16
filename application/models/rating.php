@@ -31,14 +31,20 @@ class Rating extends CI_Model {
      * @access   public
      * @param    string
      * @param    int
+     * @param    int
      * @return   array
      */
-    public function read($content_type, $content_id)
+    public function read($content_type, $content_id, $last_rating_id = FALSE)
     {
         $this->db->from('ratings');
         $this->db->select('');
         $this->db->where('type', $content_type);
         $this->db->where('content_id', $content_id);
+        if ($last_rating_id) {
+            $this->db->where('rating_id <', $last_rating_id);
+        }
+        $this->db->limit(15);
+        $this->db->order_by('rating_id', 'desc');
         $query = $this->db->get();
 
         return $query->result_array();
