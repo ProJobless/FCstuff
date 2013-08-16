@@ -82,14 +82,18 @@ class User extends CI_Model {
      * @access   public
      * @param    string
      * @param    int
-     * @param    int
      * @return   array
      */
-    public function search($name, $limit = 5, $offset = 0)
+    public function search($name, $last_user_id = FALSE)
     {
         $this->db->from('users');
         $this->db->like('name', $name);
-        $this->db->limit($limit, $offset);
+        $this->db->limit(15);
+        $this->db->order_by('user_id', 'desc');
+        $this->db->where('type !=', 'deleted');
+        if ($last_user_id) {
+            $this->db->where('user_id <', $last_user_id);
+        }
         $query = $this->db->get();
 
         return $query->result_array();
