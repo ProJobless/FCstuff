@@ -40,7 +40,7 @@ class Notification extends CI_Model {
         $this->db->from('notifications');
         $this->db->select();
         $this->db->order_by('notification_id', 'desc');
-        $this->db->limit(5);
+        $this->db->limit(15);
         $this->db->where('user_id', $user_id);
         if ($before) {
             $this->db->where('notification_id <', $before);
