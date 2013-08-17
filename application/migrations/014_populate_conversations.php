@@ -30,11 +30,11 @@ class Migration_Populate_conversations extends CI_Migration {
                     'message'    => $message
                 ));
 
-                $message = "This message from user 2 is recieved by user $j.";
+                $message = "This message from user 2 is received by user $j.";
                 $this->db->insert('conversations', array(
                     'user_id'    => $j,
                     'friend_id'  => 2,
-                    'type'       => 'recieved',
+                    'type'       => 'received',
                     'message'    => $message
                 ));
             }
