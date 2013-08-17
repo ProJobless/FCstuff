@@ -36,7 +36,7 @@ class Cookie extends CI_Model {
     public function read($user_id, $token)
     {
         $this->db->query("SET time_zone = '+00:00'");
-        $this->from('cookies');
+        $this->db->from('cookies');
         $this->db->select('');
         $this->db->limit(1);
         $this->db->where('user_id', $user_id);
