@@ -34,6 +34,7 @@ class User extends CI_Model {
      */
     public function read($identifier)
     {
+        $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('users');
         $this->db->select('');
         $this->db->limit(1);
@@ -86,6 +87,7 @@ class User extends CI_Model {
      */
     public function search($name, $last_user_id = FALSE)
     {
+        $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('users');
         $this->db->like('name', $name);
         $this->db->limit(15);

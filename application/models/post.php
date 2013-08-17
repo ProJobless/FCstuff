@@ -34,6 +34,7 @@ class Post extends CI_Model {
      */
     public function read($post_id)
     {
+        $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('posts');
         $this->db->select('');
         $this->db->limit(1);
@@ -55,6 +56,7 @@ class Post extends CI_Model {
      */
     public function user($user_id, $last_post_id = FALSE)
     {
+        $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('posts');
         $this->db->select();
         $this->db->order_by('post_id', 'desc');
@@ -79,6 +81,7 @@ class Post extends CI_Model {
      */
     public function feed($last_post_id = FALSE)
     {
+        $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('posts');
         $this->db->select('');
         $this->db->order_by('post_id', 'desc');

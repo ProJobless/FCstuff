@@ -36,6 +36,7 @@ class Rating extends CI_Model {
      */
     public function read($content_type, $content_id, $last_rating_id = FALSE)
     {
+        $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('ratings');
         $this->db->select('');
         $this->db->where('type', $content_type);

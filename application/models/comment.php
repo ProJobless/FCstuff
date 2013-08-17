@@ -35,6 +35,7 @@ class Comment extends CI_Model {
      */
     public function read($post_id, $last_comment_id = FALSE)
     {
+        $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('comments');
         $this->db->select('');
         $this->db->limit(15);
