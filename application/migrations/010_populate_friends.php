@@ -18,7 +18,7 @@ class Migration_Populate_friends extends CI_Migration {
      */
     public function up()
     {
-        $staus = array('friends', 'req_sent', 'req_recvd');
+        $staus = array('friends', 'req_sent', 'req_received');
 
         for ($i = 0; $i < 3; $i++)
         {
@@ -38,7 +38,7 @@ class Migration_Populate_friends extends CI_Migration {
         $this->db->insert('friends', array(
             'user_id'   => 4,
             'friend_id' => 2,
-            'status'    => 'req_recvd'
+            'status'    => 'req_received'
         ));
 
         $this->db->insert('friends', array(

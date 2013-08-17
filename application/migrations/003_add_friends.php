@@ -19,12 +19,14 @@ class Migration_Add_friends extends CI_Migration {
     public function up()
     {
         $this->dbforge->add_field(array(
+            "relationship_id INT(10) NOT NULL AUTO_INCREMENT",
             "user_id INT(10)",
             "friend_id INT(10)",
-            "status VARCHAR(10)",
+            "status VARCHAR(20)",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
         ));
 
+        $this->dbforge->add_key('relationship_id', TRUE);
         $this->dbforge->add_key('user_id');
         $this->dbforge->add_key('friend_id');
 
