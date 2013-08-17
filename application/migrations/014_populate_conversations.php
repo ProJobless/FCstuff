@@ -18,24 +18,26 @@ class Migration_Populate_conversations extends CI_Migration {
      */
     public function up()
     {
-        // User
-        for ($i = 3; $i <= 6; $i++)
-        {
-            $message = "This message is sent to user $i by user 2.";
-            $this->db->insert('conversations', array(
-                'user_id'    => 2,
-                'friend_id'  => $i,
-                'type'       => 'sent',
-                'message'    => $message
-            ));
+        for ($i = 0; $i < 10; $i++) {
+            // User
+            for ($j = 3; $j <= 6; $j++)
+            {
+                $message = "This message is sent to user $j by user 2.";
+                $this->db->insert('conversations', array(
+                    'user_id'    => 2,
+                    'friend_id'  => $j,
+                    'type'       => 'sent',
+                    'message'    => $message
+                ));
 
-            $message = "This message from user 2 is recieved by user $i.";
-            $this->db->insert('conversations', array(
-                'user_id'    => $i,
-                'friend_id'  => 2,
-                'type'       => 'recieved',
-                'message'    => $message
-            ));
+                $message = "This message from user 2 is recieved by user $j.";
+                $this->db->insert('conversations', array(
+                    'user_id'    => $j,
+                    'friend_id'  => 2,
+                    'type'       => 'recieved',
+                    'message'    => $message
+                ));
+            }
         }
     }
 
