@@ -24,7 +24,8 @@ class Migration_Add_conversations extends CI_Migration {
             "friend_id INT(10)",
             "type VARCHAR(10)",
             "message TEXT",
-            "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+            "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+            "seen BOOLEAN DEFAULT FALSE"
         ));
 
         $this->dbforge->add_key('message_id', TRUE);
