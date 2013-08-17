@@ -20,7 +20,7 @@ Configurations
 
 * Change the following settings -
 
-    + The hostname of your database server. Example:
+    + The hostname of the database server. Example:
 
         ```php
         $db['default']['hostname'] = 'localhost';
@@ -38,7 +38,7 @@ Configurations
         $db['default']['password'] = 'root';
         ```
 
-    + The name of the database you want to connect to. Example:
+    + The name of the database. Example:
 
         ```php
         $db['default']['database'] = 'fcstuff';
@@ -59,7 +59,7 @@ Configurations
     + The website url. Example:
 
         ```php
-        $config['base_url'] = 'http://fcstuff.com/';
+        $config['base_url'] = 'http://example.com/';
         ```
 
     + The threshhold for logging error messages. Example:
@@ -70,7 +70,17 @@ Configurations
 
 ###Database Migrations
 
-* Run the migration script by visiting http://base_url/migrations/
+* URL for running database migrations :
+
+    ```
+    http://example.com/migrations/
+    ```
+
+* URL for rolling back changes :
+
+    ```
+    http://example.com/migrations/rollback/
+    ```
 
 License
 -------
