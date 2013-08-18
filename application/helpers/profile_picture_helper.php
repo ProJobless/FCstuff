@@ -12,53 +12,36 @@
 
 // ------------------------------------------------------------------------
 
-/**
- * Generate the default profile picture with a random background color.
- *
- * @access   public
- * @param    string   User id
- * @return   string   Filename of the generated image
- */
 if ( ! function_exists('generate_profile_picture'))
 {
-	function generate_profile_picture($user_id)
-	{
-        // -------------------------
-        // Generate image.
-        // -------------------------
+    /**
+     * Generate the default profile picture with a random background color.
+     *
+     * @access   public
+     * @param    string   User_id
+     * @return   string   Filename of the generated image
+     */
+    function generate_profile_picture($user_id)
+    {
+        // Generate the profile picture.
+        $canvas     = imagecreatetruecolor(320, 320);
+        $avatar     = imagecreatefrompng('assets/images/avatar.png');
+        $red        = mt_rand(0, 255);
+        $green      = mt_rand(0, 255);
+        $blue       = mt_rand(0, 255);
+        $background = imagecolorallocate($canvas, $red, $green, $blue);
 
-        $canvas = imagecreatetruecolor(320, 320);
-        $avatar = imagecreatefrompng('assets/images/avatar.png');
-
-        $back = imagecolorallocate($canvas, rand(0,255), rand(0,255), rand(0,255));
-
-        imagefill($canvas, 0, 0, $back);
-
+        imagefill($canvas, 0, 0, $background);
         imagecopy($canvas, $avatar, 0, 0, 0, 0, 320, 320);
 
-        // -------------------------
-        // Generate filename.
-        // -------------------------
-
+        // Save the image.
         $filename = md5($user_id . rand());
-
-        // -------------------------
-        // Save image.
-        // -------------------------
-
         $location = 'user-content/' . $user_id . '/' . $filename . '.png';
-
         imagepng($canvas, $location);
 
-        imagedestroy($canvas);
-        imagedestroy($avatar);
-
-        // -------------------------
-        // Return filename.
-        // -------------------------
-
+        // Return the filename.
         return $filename;
-	}
+    }
 }
 
 /* End of file profile_picture_helper.php */
