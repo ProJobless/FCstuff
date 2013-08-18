@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Authentication Helper
+ * Cookie Helper
  *
  * @package    FCstuff
  * @category   Authentication
@@ -15,7 +15,7 @@
 if ( ! function_exists('authenticate_cookie'))
 {
     /**
-     * Check authentication cookie and login user.
+     * Authenticate user via cookie.
      *
      * @access   public
      */
@@ -75,5 +75,5 @@ if ( ! function_exists('authenticate_cookie'))
     }
 }
 
-/* End of file authentication_helper.php */
-/* File location : ./application/helpers/authentication_helper.php */
+/* End of file cookie_helper.php */
+/* File location : ./application/helpers/cookie_helper.php */
