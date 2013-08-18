@@ -12,13 +12,13 @@
 
 // ------------------------------------------------------------------------
 
-/**
- * Check authentication cookie and login user.
- *
- * @access   public
- */
 if ( ! function_exists('authenticate_cookie'))
 {
+    /**
+     * Check authentication cookie and login user.
+     *
+     * @access   public
+     */
     function authenticate_cookie()
     {
         $CI = get_instance();
@@ -31,13 +31,16 @@ if ( ! function_exists('authenticate_cookie'))
 
         if (count($cookie) == 2)
         {
+            // Extract user_id and token from the cookie.
             $user_id = $cookie[0];
             $token   = $cookie[1];
 
+            // Check if token is valid.
             $auth = $CI->cookie->read($user_id, $token);
 
             if ($auth)
             {
+                // Set user data as session array.
                 $user = $CI->user->read($auth[0]['user_id']);
                 $CI->session->set_userdata('user', $user[0]);
 
@@ -46,24 +49,31 @@ if ( ! function_exists('authenticate_cookie'))
                 $user_agent = substr($CI->input->user_agent(), 0, 300);
                 $cookie = $user_id . '$' . $token;
 
-                $data = array(
+                // Update token in database.
+                $CI->cookie->update($auth[0]['cookie_id'], array(
                     'token'      => $token,
                     'ip_address' => $ip_address,
                     'user_agent' => $user_agent
-                );
+                ));
 
-                $CI->cookie->update($auth[0]['cookie_id'], $data);
-
+                // Update token in the cookie.
                 $CI->input->set_cookie('token', $cookie, 2592000);
             }
 
+            // Destroy cookie if token is invalid.
             else
             {
                 $CI->input->set_cookie('token', '');
             }
         }
+
+        // Destroy the cookie if it is invalid.
+        else
+        {
+            $CI->input->set_cookie('token', '');
+        }
     }
 }
 
-/* End of file authentication.php */
-/* File location : ./application/helpers/authentication.php */
+/* End of file authentication_helper.php */
+/* File location : ./application/helpers/authentication_helper.php */
