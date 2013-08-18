@@ -19,7 +19,7 @@ class Migration_Add_logs extends CI_Migration {
     public function up()
     {
         $this->dbforge->add_field(array(
-            "sl INT(10) NOT NULL AUTO_INCREMENT",
+            "log_id INT(10) NOT NULL AUTO_INCREMENT",
             "user_id INT(10)",
             "controller VARCHAR(30)",
             "method VARCHAR(30)",
@@ -28,7 +28,7 @@ class Migration_Add_logs extends CI_Migration {
             "user_agent VARCHAR(300)"
         ));
 
-        $this->dbforge->add_key('sl', TRUE);
+        $this->dbforge->add_key('log_id', TRUE);
         $this->dbforge->add_key('user_id');
 
         $this->dbforge->create_table('logs');
