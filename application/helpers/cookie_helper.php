@@ -75,5 +75,39 @@ if ( ! function_exists('authenticate_cookie'))
     }
 }
 
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('set_cookie'))
+{
+    /**
+     * Set a new authentication cookie.
+     *
+     * @access   public
+     * @param    int
+     */
+    function set_cookie($user_id)
+    {
+        $CI = get_instance();
+
+        $CI->load->model('cookie');
+
+        $token = md5(rand());
+        $ip_address = $CI->input->ip_address();
+        $user_agent = substr($CI->input->user_agent(), 0, 300);
+        $cookie = $user_id . '$' . $token;
+
+        // Add the new authentication token to database.
+        $CI->cookie->create(array(
+            'user_id'    => $user_id,
+            'token'      => $token,
+            'ip_address' => $ip_address,
+            'user_agent' => $user_agent
+        ));
+
+        // Add the new cookie.
+        $CI->input->set_cookie('token', $cookie, 2592000);
+    }
+}
+
 /* End of file cookie_helper.php */
 /* File location : ./application/helpers/cookie_helper.php */
