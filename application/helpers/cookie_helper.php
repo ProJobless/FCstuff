@@ -109,5 +109,41 @@ if ( ! function_exists('set_cookie'))
     }
 }
 
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('delete_cookie'))
+{
+    /**
+     * Delete an authentication token.
+     *
+     * @access   public
+     */
+    function delete_cookie()
+    {
+        $CI = get_instance();
+
+        $CI->load->model('cookie');
+
+        $cookie = $CI->input->cookie('token');
+        $cookie = explode('$', $cookie);
+
+        if (count($cookie) == 2)
+        {
+            $user_id = $cookie[0];
+            $token   = $cookie[1];
+
+            $cookie = $CI->cookie->read($user_id, $token);
+
+            if ($cookie)
+            {
+                $cookie_id = $cookie[0]['cookie_id'];
+
+                $CI->cookie->delete($cookie_id);
+                $CI->input->set_cookie('token', '');
+            }
+        }
+    }
+}
+
 /* End of file cookie_helper.php */
 /* File location : ./application/helpers/cookie_helper.php */
