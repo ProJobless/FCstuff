@@ -19,7 +19,7 @@ class Migration_Populate_users extends CI_Migration {
     public function up()
     {
         $this->load->library('phpass');
-        $this->load->helper('profile_picture');
+        $this->load->helper('user');
 
         // -------------------------
         // Common values
