@@ -39,29 +39,47 @@ class Authentication extends CI_Controller {
     {
         log_access('authentication', 'login');
 
+        // Logout previous user.
+        $this->_logout();
+
+        // Assume that the login was unsuccessful.
+        $this->session->set_flashdata('login_failed', TRUE);
+
+        // Grab stuff from $_POST.
         $identifier = $this->input->post('identifier');
         $password   = $this->input->post('password');
         $remember   = $this->input->post('remember');
 
-        if ($identifier && $password && $auth = $this->user->read($identifier))
+        // Does the user exist?
+        if ($identifier && $password && $user = $this->user->read($identifier))
         {
-            if ($this->phpass->check($password, $auth[0]['password']))
+            // Is the password correct?
+            if ($this->phpass->check($password, $user[0]['password']))
             {
+                // Login was successful. Hurray!
+                $this->session->set_flashdata('login_failed', FALSE);
+
+                // Set user data as session array.
+                $this->session->set_userdata('user', $user[0]);
+
+                // Set an authentication cookie.
                 if ($remember)
                 {
-                    set_cookie($auth[0]['user_id']);
+                    set_cookie($user[0]['user_id']);
                 }
 
+                // Output TRUE for ajax requests.
                 if ($ajax)
                 {
-                    echo TRUE;
-                }
-
-                else
-                {
-                    redirect('pages/feed');
+                    $this->output->set_output(TRUE);
                 }
             }
+        }
+
+        // Redirect to home if this wasn't an ajax request.
+        if ( ! $ajax)
+        {
+            redirect('/');
         }
     }
 
@@ -72,10 +90,27 @@ class Authentication extends CI_Controller {
      *
      * @access   public
      */
-    public function logout()
+    public function logout($ajax = FALSE)
     {
         log_access('authentication', 'logout');
 
+        // Logout the user.
+        $this->_logout();
+
+        // Redirect to home if this wasn't an ajax request.
+        if ( ! $ajax)
+        {
+            redirect('/');
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * @access   private
+     */
+    private function _logout()
+    {
         // Unset session array.
         $this->session->unset_userdata('user');
 
