@@ -27,6 +27,7 @@ if ( ! function_exists('authenticate_cookie'))
         $CI->load->model('user');
 
         $cookie = $CI->input->cookie('token');
+        $CI->input->set_cookie('token', '');
         $cookie = explode('$', $cookie);
 
         if (count($cookie) == 2)
@@ -59,18 +60,6 @@ if ( ! function_exists('authenticate_cookie'))
                 // Update token in the cookie.
                 $CI->input->set_cookie('token', $cookie, 2592000);
             }
-
-            // Destroy cookie if token is invalid.
-            else
-            {
-                $CI->input->set_cookie('token', '');
-            }
-        }
-
-        // Destroy the cookie if it is invalid.
-        else
-        {
-            $CI->input->set_cookie('token', '');
         }
     }
 }
