@@ -39,8 +39,11 @@ class Authentication extends CI_Controller {
     {
         log_access('authentication', 'login');
 
-        // Logout previous user.
-        $this->_logout();
+        // Remove user array from $_SESSION.
+        $this->session->unset_userdata('user');
+
+        // Remove authentication cookies.
+        delete_cookie();
 
         // Assume that the login was unsuccessful.
         $this->session->set_flashdata('login_failed', TRUE);
@@ -68,7 +71,7 @@ class Authentication extends CI_Controller {
                     set_cookie($user[0]['user_id']);
                 }
 
-                // Output TRUE for ajax requests.
+                // Output TRUE if this is an AJAX request.
                 if ($ajax)
                 {
                     $this->output->set_output(TRUE);
@@ -76,7 +79,7 @@ class Authentication extends CI_Controller {
             }
         }
 
-        // Redirect to home if this wasn't an ajax request.
+        // Redirect to home if this isn't an ajax request.
         if ( ! $ajax)
         {
             redirect('/');
@@ -89,33 +92,23 @@ class Authentication extends CI_Controller {
      * Logout user.
      *
      * @access   public
+     * @param    string
      */
     public function logout($ajax = FALSE)
     {
         log_access('authentication', 'logout');
 
-        // Logout the user.
-        $this->_logout();
+        // Remove user array from $_SESSION.
+        $this->session->unset_userdata('user');
 
-        // Redirect to home if this wasn't an ajax request.
+        // Remove cookies.
+        delete_cookie();
+
+        // Redirect to home if this isn't an ajax request.
         if ( ! $ajax)
         {
             redirect('/');
         }
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
-     * @access   private
-     */
-    private function _logout()
-    {
-        // Unset session array.
-        $this->session->unset_userdata('user');
-
-        // Remove cookie.
-        delete_cookie();
     }
 }
 
