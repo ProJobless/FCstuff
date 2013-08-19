@@ -124,9 +124,11 @@ if ( ! function_exists('delete_cookie'))
 
         $CI->load->model('cookie');
 
+        // Extract user_id and token from the cookie.
         $cookie = $CI->input->cookie('token');
         $cookie = explode('$', $cookie);
 
+        // Is the cookie valid?
         if (count($cookie) == 2)
         {
             $user_id = $cookie[0];
@@ -134,14 +136,18 @@ if ( ! function_exists('delete_cookie'))
 
             $cookie = $CI->cookie->read($user_id, $token);
 
+            // Is the cookie really valid?
             if ($cookie)
             {
                 $cookie_id = $cookie[0]['cookie_id'];
 
+                // Delete token from database.
                 $CI->cookie->delete($cookie_id);
-                $CI->input->set_cookie('token', '');
             }
         }
+
+        // Delete cookie from browser.
+        $CI->input->set_cookie('token', '');
     }
 }
 
