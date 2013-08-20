@@ -91,17 +91,30 @@ class Users extends CI_Controller {
             // Set an authentication cookie.
             set_cookie($user_id);
 
-            // Output TRUE if this is an AJAX request.
+            // Set a session variable for welcome message.
+            $this->session->set_flashdata('welcome', TRUE);
+
+            // Output TRUE for AJAX requests.
             if ($ajax)
             {
                 $this->output->set_output(TRUE);
             }
         }
 
-        // Redirect to home if this isn't an ajax request.
+        // Redirect if this isn't an ajax request.
         if ( ! $ajax)
         {
-            redirect('/');
+            // Is an URL provided?
+            if ($url = $this->input->get('continue'))
+            {
+                redirect($url);
+            }
+
+            // Redirect to home if an URL isn't provided.
+            else
+            {
+                redirect('/');
+            }
         }
     }
 }
