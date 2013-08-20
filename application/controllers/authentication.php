@@ -68,7 +68,7 @@ class Authentication extends CI_Controller {
                     set_cookie($user[0]['user_id']);
                 }
 
-                // Output TRUE if this is an AJAX request.
+                // Output TRUE for AJAX requests.
                 if ($ajax)
                 {
                     $this->output->set_output(TRUE);
@@ -76,10 +76,20 @@ class Authentication extends CI_Controller {
             }
         }
 
-        // Redirect to home if this isn't an ajax request.
+        // Redirect if this isn't an ajax request.
         if ( ! $ajax)
         {
-            redirect('/');
+            // Is an URL provided?
+            if ($url = $this->input->get('continue'))
+            {
+                redirect($url);
+            }
+
+            // Redirect to home if an URL isn't provided.
+            else
+            {
+                redirect('/');
+            }
         }
     }
 
@@ -101,8 +111,20 @@ class Authentication extends CI_Controller {
         // Remove cookies.
         delete_cookie();
 
-        // Redirect to home if this isn't an ajax request.
-        if ( ! $ajax)
+        // Output TRUE for AJAX requests.
+        if ($ajax)
+        {
+            $this->output->set_output(TRUE);
+        }
+
+        // Else, proceed to the provided URL.
+        elseif ($url = $this->input->get('continue'))
+        {
+            redirect($url);
+        }
+
+        // Else, proceed to home.
+        else
         {
             redirect('/');
         }
