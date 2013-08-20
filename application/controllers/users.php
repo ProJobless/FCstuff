@@ -79,7 +79,10 @@ class Users extends CI_Controller {
             $this->session->unset_userdata('captcha');
 
             // Generate a profile picture.
-            mkdir('user-content/' . $user_id, 0777, TRUE);
+            if ( ! file_exists('user-content/' . $user_id))
+            {
+                mkdir('user-content/' . $user_id, 0777, TRUE);
+            }
 
             $this->user->update($user_id, array(
                 'profile_picture' => generate_profile_picture($user_id)
