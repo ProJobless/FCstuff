@@ -97,5 +97,31 @@ if ( ! function_exists('generate_profile_picture'))
     }
 }
 
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('update_last_seen_timestamp'))
+{
+    /**
+     * Update the last seen timestamp if a user is logged in.
+     *
+     * @access   public
+     */
+    function update_last_seen_timestamp()
+    {
+        $CI = get_instance();
+
+        $CI->load->model('user');
+
+        // Check if user is logged in.
+        if ($user = $CI->session->userdata('user'))
+        {
+            // Update timestamp.
+            $CI->user->update($user['user_id'], array(
+                'last_seen' => gmdate('Y-m-d H:i:s')
+            ));
+        }
+    }
+}
+
 /* End of file user_helper.php */
 /* File location : ./application/helpers/user_helper.php */

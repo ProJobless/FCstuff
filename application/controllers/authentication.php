@@ -62,6 +62,9 @@ class Authentication extends CI_Controller {
                 // Set user data as session array.
                 $this->session->set_userdata('user', $user[0]);
 
+                // Update the last seen timestamp.
+                update_last_seen_timestamp();
+
                 // Set an authentication cookie.
                 if ($remember)
                 {
@@ -104,6 +107,9 @@ class Authentication extends CI_Controller {
     public function logout($ajax = FALSE)
     {
         log_access('authentication', 'logout');
+
+        // Update the last seen timestamp.
+        update_last_seen_timestamp();
 
         // Remove user array from $_SESSION.
         $this->session->unset_userdata('user');

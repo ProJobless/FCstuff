@@ -21,6 +21,9 @@ class Validation extends CI_Controller {
     {
         log_access('validation', 'check');
 
+        // Update the last seen timestamp.
+        update_last_seen_timestamp();
+
         // Get the content to validate from $_POST.
         $content = $this->input->post('content');
 
