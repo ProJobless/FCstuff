@@ -99,6 +99,20 @@ if ( ! function_exists('is_valid'))
                 }
 
                 break;
+
+            // -----------------------------------------------------------
+
+            case 'user_id':
+
+                if (strlen($content) > 0
+                    && strlen($content) <= 10
+                    && is_numeric($content)
+                    && $CI->user->read($content))
+                {
+                    return TRUE;
+                }
+
+                break;
         }
     }
 }
