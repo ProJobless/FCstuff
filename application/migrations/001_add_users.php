@@ -27,7 +27,7 @@ class Migration_Add_users extends CI_Migration {
             "reputation INT(10) DEFAULT '0' ",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
             "type VARCHAR(20) DEFAULT 'standard' ",
-            "verification_key VARCHAR(32)",
+            "verification_key VARCHAR(32) DEFAULT '' ",
             "recovery_key VARCHAR(32)",
             "birthday DATE",
             "about VARCHAR(500)",

@@ -21,7 +21,6 @@ class Users extends CI_Controller {
         parent::__construct();
 
         $this->load->model('user');
-        $this->load->helper('user');
         $this->load->library('phpass');
     }
 
@@ -100,6 +99,67 @@ class Users extends CI_Controller {
                 $this->output->set_output(TRUE);
             }
         }
+
+        // Redirect if this isn't an ajax request.
+        if ( ! $ajax)
+        {
+            // Is an URL provided?
+            if ($url = $this->input->get('continue'))
+            {
+                redirect($url);
+            }
+
+            // Redirect to home if an URL isn't provided.
+            else
+            {
+                redirect('/');
+            }
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Verify account.
+     *
+     * @access   public
+     * @param    int      User id
+     * @param    string   The verification key
+     * @param    string
+     */
+    public function verify($user_id = '', $verification_key = '', $ajax = FALSE)
+    {
+        if (is_valid('user_id', $user_id)
+            && is_valid('verification_key', $verification_key))
+        {
+            $user = $this->user->read($user_id);
+
+            if ($verification_key == $user[0]['verification_key'])
+            {
+                $this->user->update($user_id, array(
+                    'verification_key' => ''
+                ));
+
+                // Set user data as session array.
+                $this->session->set_userdata('user', $user[0]);
+
+                // Update the last seen timestamp.
+                update_last_seen_timestamp();
+
+                // Set an authentication cookie.
+                set_cookie($user[0]['user_id']);
+
+                // Output TRUE for AJAX requests.
+                if ($ajax)
+                {
+                    $this->output->set_output(TRUE);
+                }
+            }
+        }
+
+        log_access('users', 'verify');
+
+        update_last_seen_timestamp();
 
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
