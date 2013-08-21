@@ -55,6 +55,9 @@ class Migrations extends CI_Controller {
      */
     public function rollback()
     {
+        $this->session->unset_userdata('user');
+        $this->input->set_cookie('token');
+
         $this->migration->version(0);
         echo "Rollback successful.";
     }
