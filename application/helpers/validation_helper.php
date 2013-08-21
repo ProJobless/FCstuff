@@ -113,6 +113,18 @@ if ( ! function_exists('is_valid'))
                 }
 
                 break;
+
+            // -----------------------------------------------------------
+
+            case 'verification_key':
+
+                if (strlen($content) > 0
+                    && strlen($content) <= 32)
+                {
+                    return TRUE;
+                }
+
+                break;
         }
     }
 }
