@@ -44,6 +44,24 @@ if ( ! function_exists('is_valid'))
 
             // ------------------------------------------------------------
 
+            case 'username':
+
+                if ( ! $CI->user->read($content)
+                 && strlen($content) > 0
+                 && strlen($content) <= 30)
+                {
+                    return TRUE;
+                }
+
+                else
+                {
+                    $CI->session->set_flashdata('invalid_username', TRUE);
+                }
+
+                break;
+
+            // ------------------------------------------------------------
+
             case 'email':
 
                 if ( ! $CI->user->read($content)
