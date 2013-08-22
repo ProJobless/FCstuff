@@ -128,6 +128,37 @@ if ( ! function_exists('is_valid'))
 
             // ------------------------------------------------------------
 
+            case 'birthday':
+
+                $birthday = explode('-', $content);
+
+                if (count($birthday) == 3)
+                {
+                    $day   = $birthday[0];
+                    $month = $birthday[1];
+                    $year  = $birthday[2];
+
+                    if (checkdate($month, $day, $year)
+                     && date("Y") - $year < 100)
+                    {
+                        return TRUE;
+                    }
+
+                    else
+                    {
+                        $CI->session->set_flashdata('invalid_birthday', TRUE);
+                    }
+                }
+
+                else
+                {
+                    $CI->session->set_flashdata('invalid_birthday', TRUE);
+                }
+
+                break;
+
+            // ------------------------------------------------------------
+
             case 'captcha':
 
                 if ($content == $CI->session->userdata('captcha'))
