@@ -254,6 +254,131 @@ class Users extends CI_Controller {
             }
         }
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Edit profile.
+     *
+     * @access   public
+     * @param    string   Item to edit
+     * @param    string
+     */
+    public function edit($item = '', $ajax = FALSE)
+    {
+        $content = $this->input->post('content');
+
+        // Is the user logged in?
+        if ($user = $this->session->userdata('user'))
+        {
+            // Get the user id.
+            $user_id = $user[0]['user_id'];
+
+            switch ($item)
+            {
+                case 'username':
+
+                    if (is_valid('username', $content))
+                    {
+                        $this->user->update($user_id, array(
+                            'username' => $content
+                        ));
+                    }
+
+                    break;
+
+                // --------------------------------------------------------
+
+                case 'email':
+
+                    if (is_valid('email', $content))
+                    {
+                        $this->user->update($user_id, array(
+                            'email'            => $content,
+                            'verified'         => FALSE,
+                            'verification_key' => md5(rand())
+                        ));
+                    }
+
+                // --------------------------------------------------------
+
+                case 'password':
+
+                    if (is_valid('password', $content))
+                    {
+                        $password = $this->phpass->hash($content);
+
+                        $this->user->update($user_id, array(
+                            'password' => $password
+                        ));
+                    }
+
+                // --------------------------------------------------------
+
+                case 'name':
+
+                    if ($is_valid('name', $content))
+                    {
+                        $this->user->update($user_id, array(
+                            'name' => $content
+                        ));
+                    }
+
+                // --------------------------------------------------------
+
+                case 'birthday':
+
+                    if ($is_valid('birthday', $content))
+                    {
+                        $this->user->update($user_id, array(
+                            'birthday' => $content
+                        ));
+                    }
+
+                // --------------------------------------------------------
+
+                case 'about_me':
+
+                    if ($is_valid('about_me', $content))
+                    {
+                        $this->user->update($user_id, array(
+                            'about_me' => $content
+                        ));
+                    }
+
+                // --------------------------------------------------------
+
+                case 'gender':
+
+                    if ($is_valid('gender', $content))
+                    {
+                        $this->user->update($user_id, array(
+                            'gender' => $content
+                        ));
+                    }
+            }
+        }
+
+        log_access('users', 'edit');
+
+        update_last_seen_timestamp();
+
+        // Redirect if this isn't an ajax request.
+        if ( ! $ajax)
+        {
+            // Is an URL provided?
+            if ($url = $this->input->get('continue'))
+            {
+                redirect($url);
+            }
+
+            // Redirect to home if an URL isn't provided.
+            else
+            {
+                redirect('/');
+            }
+        }
+    }
 }
 
 /* End of file users.php */
