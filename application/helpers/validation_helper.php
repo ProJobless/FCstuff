@@ -30,30 +30,24 @@ if ( ! function_exists('is_valid'))
 
         switch ($type)
         {
-            case 'name':
+            case 'user_id':
 
-                if (strlen($content) > 0 &&
-                    strlen($content) < 31 &&
-                    str_word_count($content) > 1 &&
-                    str_word_count($content) < 4)
+                if (strlen($content) > 0
+                 && strlen($content) <= 10
+                 && is_numeric($content)
+                 && $CI->user->read($content))
                 {
                     return TRUE;
                 }
 
-                else
-                {
-                    $CI->session->set_flashdata('invalid_name', TRUE);
-                    return FALSE;
-                }
-
                 break;
 
-            // -----------------------------------------------------------
+            // ------------------------------------------------------------
 
             case 'email':
 
-                if ( ! $CI->user->read($content) &&
-                    filter_var($content, FILTER_VALIDATE_EMAIL))
+                if ( ! $CI->user->read($content)
+                  && filter_var($content, FILTER_VALIDATE_EMAIL))
                 {
                     return TRUE;
                 }
@@ -61,12 +55,11 @@ if ( ! function_exists('is_valid'))
                 else
                 {
                     $CI->session->set_flashdata('invalid_email', TRUE);
-                    return FALSE;
                 }
 
                 break;
 
-            // -----------------------------------------------------------
+            // ------------------------------------------------------------
 
             case 'password':
 
@@ -77,13 +70,45 @@ if ( ! function_exists('is_valid'))
 
                 else
                 {
-                    $CI->session->set_flashdata('invalid_email', TRUE);
-                    return FALSE;
+                    $CI->session->set_flashdata('invalid_password', TRUE);
                 }
 
                 break;
 
-            // -----------------------------------------------------------
+            // ------------------------------------------------------------
+
+            case 'name':
+
+                if (strlen($content) > 0
+                 && strlen($content) < 31
+                 && str_word_count($content) > 1
+                 && str_word_count($content) < 4)
+                {
+                    return TRUE;
+                }
+
+                else
+                {
+                    $CI->session->set_flashdata('invalid_name', TRUE);
+                }
+
+                break;
+
+            // ------------------------------------------------------------
+
+            case 'md5':
+            case 'verification_key':
+            case 'recovery_key':
+            case 'unsubscription_key':
+
+                if (strlen($content) > 0 && strlen($content) <= 32)
+                {
+                    return TRUE;
+                }
+
+                break;
+
+            // ------------------------------------------------------------
 
             case 'captcha':
 
@@ -95,36 +120,6 @@ if ( ! function_exists('is_valid'))
                 else
                 {
                     $CI->session->set_flashdata('invalid_captcha', TRUE);
-                    return FALSE;
-                }
-
-                break;
-
-            // -----------------------------------------------------------
-
-            case 'user_id':
-
-                if (strlen($content) > 0
-                    && strlen($content) <= 10
-                    && is_numeric($content)
-                    && $CI->user->read($content))
-                {
-                    return TRUE;
-                }
-
-                break;
-
-            // -----------------------------------------------------------
-
-            case 'md5':
-            case 'verification_key':
-            case 'recovery_key':
-            case 'unsubscription_key':
-
-                if (strlen($content) > 0
-                    && strlen($content) <= 32)
-                {
-                    return TRUE;
                 }
 
                 break;
