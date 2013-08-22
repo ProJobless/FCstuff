@@ -55,13 +55,14 @@ class Users extends CI_Controller {
             && is_valid('captcha', $captcha))
         {
             $data = array(
-                'username'         => generate_username($email),
-                'email'            => $email,
-                'password'         => $this->phpass->hash($password),
-                'name'             => ucwords(strtolower($name)),
-                'verification_key' => md5(rand()),
-                'recovery_key'     => md5(rand()),
-                'last_seen'        => gmdate('Y-m-d H:i:s')
+                'username'           => generate_username($email),
+                'email'              => $email,
+                'password'           => $this->phpass->hash($password),
+                'name'               => ucwords(strtolower($name)),
+                'verification_key'   => md5(rand()),
+                'recovery_key'       => md5(rand()),
+                'unsubscription_key' => md5(rand()),
+                'last_seen'          => gmdate('Y-m-d H:i:s')
             );
 
             // Add the user to database.
@@ -130,14 +131,17 @@ class Users extends CI_Controller {
     public function verify($user_id = '', $verification_key = '', $ajax = FALSE)
     {
         if (is_valid('user_id', $user_id)
-            && is_valid('verification_key', $verification_key))
+            && is_valid('md5', $verification_key))
         {
             $user = $this->user->read($user_id);
 
-            if ($verification_key == $user[0]['verification_key'])
+            if ( ! $user[0]['verified']
+                && $user[0]['verification_key'] == $verification_key
+                && $user[0]['type'] != 'deleted')
             {
                 $this->user->update($user_id, array(
-                    'verification_key' => ''
+                    'verified'         => TRUE,
+                    'verification_key' => md5(rand())
                 ));
 
                 // Set user data as session array.
