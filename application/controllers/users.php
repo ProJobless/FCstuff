@@ -379,6 +379,74 @@ class Users extends CI_Controller {
             }
         }
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete an account.
+     *
+     * @access   public
+     * @param    string
+     */
+    public function delete($ajax = FALSE)
+    {
+        log_access('users', 'delete');
+
+        update_last_seen_timestamp();
+
+        // Get password from $_POST.
+        $password = $this->input->post('password');
+
+        // Is the user logged in?
+        if ($user = $this->session->userdata('user'))
+        {
+            // Is the password correct?
+            if ($this->phpass->check($password, $user['password']))
+            {
+                // Set user as 'deleted'.
+                $this->user->update($user['user_id'], array(
+                    'type' => 'deleted'
+                ));
+
+                // Delete content uploaded by the user.
+                $this->load->helper('file');
+                delete_files('user-content/' . $user['user_id'] .'/');
+
+                // Remove user array from $_SESSION.
+                $this->session->unset_userdata('user');
+
+                // Remove cookies.
+                delete_cookie();
+
+                // Output TRUE for AJAX requests.
+                if ($ajax)
+                {
+                    $this->output->set_output(TRUE);
+                }
+            }
+
+            else
+            {
+                $this->session->set_flashdata('invalid_password', TRUE);
+            }
+        }
+
+        // Redirect if this isn't an ajax request.
+        if ( ! $ajax)
+        {
+            // Is an URL provided?
+            if ($url = $this->input->get('continue'))
+            {
+                redirect($url);
+            }
+
+            // Redirect to home if an URL isn't provided.
+            else
+            {
+                redirect('/');
+            }
+        }
+    }
 }
 
 /* End of file users.php */
