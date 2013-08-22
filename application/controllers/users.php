@@ -181,6 +181,79 @@ class Users extends CI_Controller {
             }
         }
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Recover account.
+     *
+     * @access   public
+     * @param    int      User id
+     * @param    string   Recovery key
+     * @param    string
+     */
+    public function recover($user_id = '', $recovery_key = '', $ajax = FALSE)
+    {
+        // Get the new password from $_POST;
+        $password = $this->input->post('password');
+
+        // Is everything valid?
+        if (is_valid('user_id', $user_id)
+            && is_valid('md5', $recovery_key)
+            && is_valid('password', $password))
+        {
+            // Get user data.
+            $user = $this->user->read($user_id);
+
+            // Check if the recovery key is valid, and if the user is verified
+            // and the account is not deleted.
+            if ($user[0]['verified']
+                && $user[0]['recovery_key'] == $recovery_key
+                && $user[0]['type'] != 'deleted')
+            {
+                // Update the password and set a new recovery key.
+                $this->user->update($user_id, array(
+                    'password'     => $this->phpass->hash($password),
+                    'recovery_key' => md5(rand())
+                ));
+
+                // Set user data as session array.
+                $this->session->set_userdata('user', $user[0]);
+
+                // Update the last seen timestamp.
+                update_last_seen_timestamp();
+
+                // Set an authentication cookie.
+                set_cookie($user[0]['user_id']);
+
+                // Output TRUE for AJAX requests.
+                if ($ajax)
+                {
+                    $this->output->set_output(TRUE);
+                }
+            }
+        }
+
+        log_access('users', 'verify');
+
+        update_last_seen_timestamp();
+
+        // Redirect if this isn't an ajax request.
+        if ( ! $ajax)
+        {
+            // Is an URL provided?
+            if ($url = $this->input->get('continue'))
+            {
+                redirect($url);
+            }
+
+            // Redirect to home if an URL isn't provided.
+            else
+            {
+                redirect('/');
+            }
+        }
+    }
 }
 
 /* End of file users.php */
