@@ -25,10 +25,11 @@ class Migration_Populate_users extends CI_Migration {
         // Common values
         // -------------------------
 
-        $data['recovery_key']     = md5(rand());
-        $data['birthday']         = date('Y-m-d H:i:s', strtotime("-18 year"));
-        $data['gender']           = 'm';
-        $data['last_seen']        = date('Y-m-d H:i:s');
+        $data['recovery_key']       = md5(rand());
+        $data['verification_key']   = md5(rand());
+        $data['unsubscription_key'] = md5(rand());
+        $data['birthday']           = date('Y-m-d H:i:s', strtotime("-18 year"));
+        $data['last_seen']          = date('Y-m-d H:i:s');
 
         // -------------------------
         // Create admin user
@@ -44,10 +45,11 @@ class Migration_Populate_users extends CI_Migration {
         $data['password']         = $this->phpass->hash('admin');
         $data['name']             = 'Awesome Admin';
         $data['reputation']       = rand(0, 1000);
+        $data['gender']           = 'm';
         $data['about']            = 'I am the awesome admin!';
         $data['type']             = 'admin';
         $data['profile_picture']  = generate_profile_picture(1);
-        $data['verification_key'] = '';
+        $data['verified']         = TRUE;
 
         $this->db->insert('users', $data);
 
@@ -58,7 +60,6 @@ class Migration_Populate_users extends CI_Migration {
         // -------------------------
 
         $data['password'] = $this->phpass->hash('pass');
-        $data['verification_key'] = md5(rand());
 
         for ($i = 2; $i <= 6; $i++)
         {
@@ -73,16 +74,32 @@ class Migration_Populate_users extends CI_Migration {
             $data['reputation']      = rand(0, 1000);
             $data['about']           = 'Hello! I am user' . $i . '!';
             $data['profile_picture'] = generate_profile_picture($i);
+            $data['gender']          = 'm';
+            $data['verified']        = FALSE;
+
+            if ($i % 2 == 0)
+            {
+                $data['gender']      = 'f';
+            }
 
             $this->db->insert('users', $data);
         }
+
+        // -------------------------
+        // Unsubscribe User 3
+        // -------------------------
+
+        $this->db->where('user_id', 3);
+        $this->db->set('unsubscribed', TRUE);
+        $this->db->update('users');
 
         // -------------------------
         // Verify User 4
         // -------------------------
 
         $this->db->where('user_id', 4);
-        $this->db->set('verification_key', '');
+        $this->db->set('verified', TRUE);
+        $this->db->set('verification_key', md5(rand()));
         $this->db->update('users');
 
         // -------------------------
