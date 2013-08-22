@@ -116,7 +116,10 @@ if ( ! function_exists('is_valid'))
 
             // -----------------------------------------------------------
 
+            case 'md5':
             case 'verification_key':
+            case 'recovery_key':
+            case 'unsubscription_key':
 
                 if (strlen($content) > 0
                     && strlen($content) <= 32)
