@@ -159,6 +159,22 @@ if ( ! function_exists('is_valid'))
 
             // ------------------------------------------------------------
 
+            case 'about_me':
+
+                if (strlen($content) > 0 && strlen($content) <= 500)
+                {
+                    return TRUE;
+                }
+
+                else
+                {
+                    $CI->session->set_flashdata('invalid_about_me', TRUE);
+                }
+
+                break;
+
+            // ------------------------------------------------------------
+
             case 'captcha':
 
                 if ($content == $CI->session->userdata('captcha'))
