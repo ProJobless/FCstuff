@@ -175,6 +175,22 @@ if ( ! function_exists('is_valid'))
 
             // ------------------------------------------------------------
 
+            case 'gender':
+
+                if ($content == 'm' OR $content == 'f')
+                {
+                    return TRUE;
+                }
+
+                else
+                {
+                    $CI->session->set_flashdata('invalid_gender', TRUE);
+                }
+
+                break;
+
+            // ------------------------------------------------------------
+
             case 'captcha':
 
                 if ($content == $CI->session->userdata('captcha'))
