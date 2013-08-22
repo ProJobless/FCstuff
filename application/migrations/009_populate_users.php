@@ -46,7 +46,7 @@ class Migration_Populate_users extends CI_Migration {
         $data['name']             = 'Awesome Admin';
         $data['reputation']       = rand(0, 1000);
         $data['gender']           = 'm';
-        $data['about']            = 'I am the awesome admin!';
+        $data['about_me']         = 'I am the awesome admin!';
         $data['type']             = 'admin';
         $data['profile_picture']  = generate_profile_picture(1);
         $data['verified']         = TRUE;
@@ -72,7 +72,7 @@ class Migration_Populate_users extends CI_Migration {
             $data['email']           = 'user' . $i . '@localhost';
             $data['name']            = 'Fname' . $i . ' Lname' . $i;
             $data['reputation']      = rand(0, 1000);
-            $data['about']           = 'Hello! I am user' . $i . '!';
+            $data['about_me']        = 'Hello! I am user' . $i . '!';
             $data['profile_picture'] = generate_profile_picture($i);
             $data['gender']          = 'm';
             $data['verified']        = FALSE;

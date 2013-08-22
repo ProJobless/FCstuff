@@ -33,7 +33,7 @@ class Migration_Add_users extends CI_Migration {
             "unsubscribed BOOLEAN DEFAULT FALSE",
             "unsubscription_key VARCHAR(32)",
             "birthday DATE",
-            "about VARCHAR(500)",
+            "about_me VARCHAR(500)",
             "gender VARCHAR(1)",
             "profile_picture VARCHAR(32)",
             "last_seen TIMESTAMP"
