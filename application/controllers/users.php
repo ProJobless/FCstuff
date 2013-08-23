@@ -394,15 +394,19 @@ class Users extends CI_Controller {
 
         update_last_seen_timestamp();
 
-        // Get password from $_POST.
+        // Grab stuff from $_POST.
         $password = $this->input->post('password');
+        $captcha  = $this->input->post('captcha');
 
         // Is the user logged in?
         if ($user = $this->session->userdata('user'))
         {
-            // Is the password correct?
-            if ($this->phpass->check($password, $user['password']))
+            // Are the password and captcha correct?
+            if ($this->phpass->check($password, $user['password'])
+             && is_valid('captcha', $captcha))
             {
+                $user_id = $user['user_id'];
+
                 // Set user as 'deleted'.
                 $this->user->update($user['user_id'], array(
                     'type' => 'deleted'
@@ -412,11 +416,38 @@ class Users extends CI_Controller {
                 $this->load->helper('file');
                 delete_files('user-content/' . $user['user_id'] .'/');
 
+                // Delete all posts made by the user.
+                $this->load->model('post');
+                $this->post->delete_all($user_id);
+
+                // Delete all comments made by the user.
+                $this->load->model('comment');
+                $this->comment->delete_all($user_id);
+
+                // Delete all conversations of the user.
+                $this->load->model('conversation');
+                $this->conversation->delete_all($user_id);
+
+                // Invalidate all authentication cookies.
+                $this->load->model('cookie');
+                $this->cookie->delete_all($user_id);
+
+                // Delete all friends.
+                $this->load->model('friend');
+                $this->friend->delete_all($user_id);
+
+                // Delete all notifications for the user.
+                $this->load->model('notification');
+                $this->notification->delete_all($user_id);
+
                 // Remove user array from $_SESSION.
                 $this->session->unset_userdata('user');
 
                 // Remove cookies.
                 delete_cookie();
+
+                // Invalidate the used captcha.
+                $this->session->unset_userdata('captcha');
 
                 // Output TRUE for AJAX requests.
                 if ($ajax)
