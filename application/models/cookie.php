@@ -75,6 +75,20 @@ class Cookie extends CI_Model {
         $this->db->where('cookie_id', $cookie_id);
         $this->db->delete('cookies');
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete all authentication cookies of an user.
+     *
+     * @access   public
+     * @param    int
+     */
+    public function delete_all($user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('cookies');
+    }
 }
 
 /* End of file cookie.php */
