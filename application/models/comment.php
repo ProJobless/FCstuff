@@ -78,6 +78,20 @@ class Comment extends CI_Model {
         $this->db->where('comment_id', $comment_id);
         $this->db->delete('comments');
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete all comments made by a user.
+     *
+     * @access   public
+     * @param    int
+     */
+    public function delete_all($user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('comments');
+    }
 }
 
 /* End of file comment.php */
