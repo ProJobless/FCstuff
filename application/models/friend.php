@@ -100,6 +100,21 @@ class Friend extends CI_Model {
         $this->db->where('relationship_id', $relationship_id);
         $this->db->delete('friends');
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete all friends of a user.
+     *
+     * @access   public
+     * @param    int
+     */
+    public function delete_all($user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->or_where('friend_id', $user_id);
+        $this->db->delete('friends');
+    }
 }
 
 /* End of file friend.php */
