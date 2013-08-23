@@ -122,6 +122,20 @@ class Post extends CI_Model {
         $this->db->where('post_id', $post_id);
         $this->db->delete('posts');
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete all posts made by a user.
+     *
+     * @access   public
+     * @param    int
+     */
+    public function delete_all($user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('posts');
+    }
 }
 
 /* End of file post.php */
