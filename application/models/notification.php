@@ -66,6 +66,20 @@ class Notification extends CI_Model {
         $this->db->where('notification_id', $notification_id);
         $this->db->delete('notifications');
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete all notification for a user.
+     *
+     * @access   public
+     * @param    int
+     */
+    public function delete_all($user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('notifications');
+    }
 }
 
 /* End of file notification.php */
