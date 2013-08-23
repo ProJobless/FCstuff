@@ -27,8 +27,8 @@ class Migration_Add_posts extends CI_Migration {
             "modified BOOLEAN DEFAULT FALSE",
             "last_modified_timestamp TIMESTAMP",
             "last_comment_timestamp TIMESTAMP",
-            "rating_score INT(10)",
-            "rating_count INT(10)"
+            "rating_score INT(10) DEFAULT '0' ",
+            "rating_count INT(10) DEFAULT '0' "
         ));
 
         $this->dbforge->add_key('post_id', TRUE);
