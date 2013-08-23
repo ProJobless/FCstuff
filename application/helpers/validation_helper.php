@@ -204,6 +204,21 @@ if ( ! function_exists('is_valid'))
                 }
 
                 break;
+
+            // ------------------------------------------------------------
+
+            case 'post':
+            case 'comment':
+
+                if (strlen($content) > 0 && strlen($content) < 5000)
+                {
+                    return TRUE;
+                }
+
+                else
+                {
+                    $CI->session->set_flashdata('invalid_' . $type, TRUE);
+                }
         }
     }
 }
