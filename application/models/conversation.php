@@ -51,6 +51,20 @@ class Conversation extends CI_Model {
 
         return $query->result_array();
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete all conversations of a user.
+     *
+     * @access   public
+     * @param    int
+     */
+    public function delete_all($user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('conversations');
+    }
 }
 
 /* End of file conversation.php */
