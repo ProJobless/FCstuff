@@ -38,6 +38,7 @@ class Ban extends CI_Model {
         $this->db->from('ban');
         $this->db->select('');
         $this->db->limit(1);
+        $this->db->order_by('ban_id', 'DESC');
         $this->db->where('user_id', $user_id);
         $query = $this->db->get();
 
