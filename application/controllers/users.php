@@ -27,6 +27,81 @@ class Users extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
+     * Authenticate user.
+     *
+     * @access   public
+     * @param    string
+     */
+    public function login($ajax = FALSE)
+    {
+        log_access('users', 'login');
+
+        // Assume that the login was unsuccessful.
+        $this->session->set_flashdata('login_failed', TRUE);
+
+        // Grab stuff from $_POST.
+        $identifier = $this->input->post('identifier');
+        $password   = $this->input->post('password');
+        $remember   = $this->input->post('remember');
+
+        // Does the user exist?
+        if ($identifier && $password && $user = $this->user->read($identifier))
+        {
+            // Is the password correct?
+            if ($this->phpass->check($password, $user[0]['password']))
+            {
+                // Login the user.
+                if (login($user[0]['user_id'], $remember))
+                {
+                    // Login was successful. Hurray!
+                    $this->session->set_flashdata('login_failed', FALSE);
+
+                    // Output TRUE for AJAX requests.
+                    if ($ajax)
+                    {
+                        $this->output->set_output(TRUE);
+                    }
+                }
+            }
+        }
+
+        // Redirect if this isn't an ajax request.
+        if ( ! $ajax)
+        {
+            proceed('/');
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Logout user.
+     *
+     * @access   public
+     * @param    string
+     */
+    public function logout($ajax = FALSE)
+    {
+        log_access('users', 'logout');
+
+        logout();
+
+        // Output TRUE for AJAX requests.
+        if ($ajax)
+        {
+            $this->output->set_output(TRUE);
+        }
+
+        // Redirect for non-AJAX requests.
+        else
+        {
+            proceed('/');
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Create a new user.
      *
      * @access   public
@@ -156,7 +231,7 @@ class Users extends CI_Controller {
      */
     public function recover($user_id = '', $recovery_key = '', $ajax = FALSE)
     {
-        log_access('users', 'verify');
+        log_access('users', 'recover');
 
         // Get the new password from $_POST;
         $password = $this->input->post('password');
