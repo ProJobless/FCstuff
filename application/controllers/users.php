@@ -104,17 +104,7 @@ class Users extends CI_Controller {
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
         {
-            // Is an URL provided?
-            if ($url = $this->input->get('continue'))
-            {
-                redirect($url);
-            }
-
-            // Redirect to home if an URL isn't provided.
-            else
-            {
-                redirect('/');
-            }
+            proceed('/');
         }
     }
 
@@ -168,17 +158,7 @@ class Users extends CI_Controller {
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
         {
-            // Is an URL provided?
-            if ($url = $this->input->get('continue'))
-            {
-                redirect($url);
-            }
-
-            // Redirect to home if an URL isn't provided.
-            else
-            {
-                redirect('/');
-            }
+            proceed('/');
         }
     }
 
@@ -241,17 +221,7 @@ class Users extends CI_Controller {
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
         {
-            // Is an URL provided?
-            if ($url = $this->input->get('continue'))
-            {
-                redirect($url);
-            }
-
-            // Redirect to home if an URL isn't provided.
-            else
-            {
-                redirect('/');
-            }
+            proceed('/');
         }
     }
 
@@ -366,17 +336,7 @@ class Users extends CI_Controller {
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
         {
-            // Is an URL provided?
-            if ($url = $this->input->get('continue'))
-            {
-                redirect($url);
-            }
-
-            // Redirect to home if an URL isn't provided.
-            else
-            {
-                redirect('/');
-            }
+            proceed('/');
         }
     }
 
@@ -465,17 +425,7 @@ class Users extends CI_Controller {
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
         {
-            // Is an URL provided?
-            if ($url = $this->input->get('continue'))
-            {
-                redirect($url);
-            }
-
-            // Redirect to home if an URL isn't provided.
-            else
-            {
-                redirect('/');
-            }
+            proceed('/');
         }
     }
 }
