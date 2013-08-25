@@ -36,12 +36,6 @@ class Authentication extends CI_Controller {
     {
         log_access('authentication', 'login');
 
-        // Remove user array from $_SESSION.
-        $this->session->unset_userdata('user');
-
-        // Remove authentication cookies.
-        delete_cookie();
-
         // Assume that the login was unsuccessful.
         $this->session->set_flashdata('login_failed', TRUE);
 
@@ -56,25 +50,17 @@ class Authentication extends CI_Controller {
             // Is the password correct?
             if ($this->phpass->check($password, $user[0]['password']))
             {
-                // Login was successful. Hurray!
-                $this->session->set_flashdata('login_failed', FALSE);
-
-                // Set user data as session array.
-                $this->session->set_userdata('user', $user[0]);
-
-                // Update the last seen timestamp.
-                update_last_seen_timestamp();
-
-                // Set an authentication cookie.
-                if ($remember)
+                // Login the user.
+                if (login($user[0]['user_id'], $remember))
                 {
-                    set_cookie($user[0]['user_id']);
-                }
+                    // Login was successful. Hurray!
+                    $this->session->set_flashdata('login_failed', FALSE);
 
-                // Output TRUE for AJAX requests.
-                if ($ajax)
-                {
-                    $this->output->set_output(TRUE);
+                    // Output TRUE for AJAX requests.
+                    if ($ajax)
+                    {
+                        $this->output->set_output(TRUE);
+                    }
                 }
             }
         }
@@ -98,14 +84,7 @@ class Authentication extends CI_Controller {
     {
         log_access('authentication', 'logout');
 
-        // Update the last seen timestamp.
-        update_last_seen_timestamp();
-
-        // Remove user array from $_SESSION.
-        $this->session->unset_userdata('user');
-
-        // Remove cookies.
-        delete_cookie();
+        logout();
 
         // Output TRUE for AJAX requests.
         if ($ajax)
