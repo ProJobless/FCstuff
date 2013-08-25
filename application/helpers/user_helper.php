@@ -125,6 +125,48 @@ if ( ! function_exists('update_last_seen_timestamp'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('login'))
+{
+    /**
+     * Login user.
+     *
+     * @access   public
+     * @param    int      User id
+     * @param    bool     Flag for setting authentication cookie
+     * @return   bool     TRUE if login was successful.
+     */
+    function login($user_id, $cookie = FALSE)
+    {
+        $CI = get_instance();
+
+        $CI->load->model('user');
+
+        // Logout previously logged in user.
+        logout();
+
+        $user = $CI->user->read($user_id);
+
+        if ($user[0]['type'] != 'deleted')
+        {
+            // Set user data as session array.
+            $CI->session->set_userdata('user', $user[0]);
+
+            // Update the last seen timestamp.
+            update_last_seen_timestamp();
+
+            // Set an authentication cookie.
+            if ($cookie)
+            {
+                set_cookie($user[0]['user_id']);
+            }
+
+            return TRUE;
+        }
+    }
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('logout'))
 {
     /**
