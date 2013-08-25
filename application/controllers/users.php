@@ -36,12 +36,6 @@ class Users extends CI_Controller {
     {
         log_access('users', 'create');
 
-        // Remove user array from $_SESSION.
-        $this->session->unset_userdata('user');
-
-        // Remove authentication cookies.
-        delete_cookie();
-
         // Grab stuff from $_POST.
         $name     = $this->input->post('name');
         $email    = $this->input->post('email');
@@ -72,9 +66,6 @@ class Users extends CI_Controller {
             $user = $this->user->read($email);
             $user_id = $user[0]['user_id'];
 
-            // Set user data as session array.
-            $this->session->set_userdata('user', $user[0]);
-
             // Invalidate the used captcha.
             $this->session->unset_userdata('captcha');
 
@@ -88,10 +79,10 @@ class Users extends CI_Controller {
                 'profile_picture' => generate_profile_picture($user_id)
             ));
 
-            // Set an authentication cookie.
-            set_cookie($user_id);
+            // Login the user.
+            login($user[0]['user_id'], TRUE);
 
-            // Set a session variable for welcome message.
+            // Set a session variable for displaying welcome message.
             $this->session->set_flashdata('welcome', TRUE);
 
             // Output TRUE for AJAX requests.
@@ -120,8 +111,9 @@ class Users extends CI_Controller {
      */
     public function verify($user_id = '', $verification_key = '', $ajax = FALSE)
     {
-        if (is_valid('user_id', $user_id)
-            && is_valid('md5', $verification_key))
+        log_access('users', 'verify');
+
+        if (is_valid('user_id', $user_id) && is_valid('md5', $verification_key))
         {
             $user = $this->user->read($user_id);
 
@@ -134,14 +126,8 @@ class Users extends CI_Controller {
                     'verification_key' => md5(rand())
                 ));
 
-                // Set user data as session array.
-                $this->session->set_userdata('user', $user[0]);
-
-                // Update the last seen timestamp.
-                update_last_seen_timestamp();
-
-                // Set an authentication cookie.
-                set_cookie($user[0]['user_id']);
+                // Login user.
+                login($user[0]['user_id'], TRUE);
 
                 // Output TRUE for AJAX requests.
                 if ($ajax)
@@ -150,10 +136,6 @@ class Users extends CI_Controller {
                 }
             }
         }
-
-        log_access('users', 'verify');
-
-        update_last_seen_timestamp();
 
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
@@ -174,6 +156,8 @@ class Users extends CI_Controller {
      */
     public function recover($user_id = '', $recovery_key = '', $ajax = FALSE)
     {
+        log_access('users', 'verify');
+
         // Get the new password from $_POST;
         $password = $this->input->post('password');
 
@@ -197,14 +181,8 @@ class Users extends CI_Controller {
                     'recovery_key' => md5(rand())
                 ));
 
-                // Set user data as session array.
-                $this->session->set_userdata('user', $user[0]);
-
-                // Update the last seen timestamp.
-                update_last_seen_timestamp();
-
-                // Set an authentication cookie.
-                set_cookie($user[0]['user_id']);
+                // Login user.
+                login($user[0]['user_id'], TRUE);
 
                 // Output TRUE for AJAX requests.
                 if ($ajax)
@@ -213,10 +191,6 @@ class Users extends CI_Controller {
                 }
             }
         }
-
-        log_access('users', 'verify');
-
-        update_last_seen_timestamp();
 
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
@@ -236,6 +210,10 @@ class Users extends CI_Controller {
      */
     public function edit($item = '', $ajax = FALSE)
     {
+        authenticate_cookie();
+
+        log_access('users', 'edit');
+
         $content = $this->input->post('content');
 
         // Is the user logged in?
@@ -247,15 +225,37 @@ class Users extends CI_Controller {
             switch ($item)
             {
                 case 'username':
+                case 'name':
+                case 'birthday':
+                case 'about_me':
+                case 'gender':
 
-                    if (is_valid('username', $content))
+                    if (is_valid($item, $content))
                     {
                         $this->user->update($user_id, array(
-                            'username' => $content
+                            $item => $content
                         ));
                     }
 
                     break;
+
+                // --------------------------------------------------------
+
+                case 'password':
+
+                    $password = $this->input->post('password');
+
+                    if ($this->phpass->check($password, $user['password']))
+                    {
+                        if (is_valid('password', $content))
+                        {
+                            $content = $this->phpass->hash($content);
+
+                            $this->user->update($user_id, array(
+                                'password' => $content
+                            ));
+                        }
+                    }
 
                 // --------------------------------------------------------
 
@@ -269,69 +269,8 @@ class Users extends CI_Controller {
                             'verification_key' => md5(rand())
                         ));
                     }
-
-                // --------------------------------------------------------
-
-                case 'password':
-
-                    if (is_valid('password', $content))
-                    {
-                        $password = $this->phpass->hash($content);
-
-                        $this->user->update($user_id, array(
-                            'password' => $password
-                        ));
-                    }
-
-                // --------------------------------------------------------
-
-                case 'name':
-
-                    if ($is_valid('name', $content))
-                    {
-                        $this->user->update($user_id, array(
-                            'name' => $content
-                        ));
-                    }
-
-                // --------------------------------------------------------
-
-                case 'birthday':
-
-                    if ($is_valid('birthday', $content))
-                    {
-                        $this->user->update($user_id, array(
-                            'birthday' => $content
-                        ));
-                    }
-
-                // --------------------------------------------------------
-
-                case 'about_me':
-
-                    if ($is_valid('about_me', $content))
-                    {
-                        $this->user->update($user_id, array(
-                            'about_me' => $content
-                        ));
-                    }
-
-                // --------------------------------------------------------
-
-                case 'gender':
-
-                    if ($is_valid('gender', $content))
-                    {
-                        $this->user->update($user_id, array(
-                            'gender' => $content
-                        ));
-                    }
             }
         }
-
-        log_access('users', 'edit');
-
-        update_last_seen_timestamp();
 
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
@@ -352,8 +291,6 @@ class Users extends CI_Controller {
     {
         log_access('users', 'delete');
 
-        update_last_seen_timestamp();
-
         // Grab stuff from $_POST.
         $password = $this->input->post('password');
         $captcha  = $this->input->post('captcha');
@@ -365,6 +302,15 @@ class Users extends CI_Controller {
             if ($this->phpass->check($password, $user['password'])
              && is_valid('captcha', $captcha))
             {
+
+                // Load models.
+                $this->load->model('post');
+                $this->load->model('comment');
+                $this->load->model('conversation');
+                $this->load->model('cookie');
+                $this->load->model('friend');
+                $this->load->model('notification');
+
                 $user_id = $user['user_id'];
 
                 // Set user as 'deleted'.
@@ -377,34 +323,25 @@ class Users extends CI_Controller {
                 delete_files('user-content/' . $user['user_id'] .'/');
 
                 // Delete all posts made by the user.
-                $this->load->model('post');
                 $this->post->delete_all($user_id);
 
                 // Delete all comments made by the user.
-                $this->load->model('comment');
                 $this->comment->delete_all($user_id);
 
                 // Delete all conversations of the user.
-                $this->load->model('conversation');
                 $this->conversation->delete_all($user_id);
 
                 // Invalidate all authentication cookies.
-                $this->load->model('cookie');
                 $this->cookie->delete_all($user_id);
 
                 // Delete all friends.
-                $this->load->model('friend');
                 $this->friend->delete_all($user_id);
 
                 // Delete all notifications for the user.
-                $this->load->model('notification');
                 $this->notification->delete_all($user_id);
 
-                // Remove user array from $_SESSION.
-                $this->session->unset_userdata('user');
-
-                // Remove cookies.
-                delete_cookie();
+                // Logout user.
+                logout();
 
                 // Invalidate the used captcha.
                 $this->session->unset_userdata('captcha');
