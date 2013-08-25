@@ -30,12 +30,21 @@ if ( ! function_exists('is_valid'))
 
         switch ($type)
         {
+            case 'id':
             case 'user_id':
+            case 'ban_id':
+            case 'comment_id':
+            case 'message_id':
+            case 'cookie_id':
+            case 'relationship_id':
+            case 'log_id':
+            case 'notification_id':
+            case 'post_id':
+            case 'rating_id':
 
                 if (strlen($content) > 0
                  && strlen($content) <= 10
-                 && is_numeric($content)
-                 && $CI->user->read($content))
+                 && is_numeric($content))
                 {
                     return TRUE;
                 }
@@ -219,6 +228,8 @@ if ( ! function_exists('is_valid'))
                 {
                     $CI->session->set_flashdata('invalid_' . $type, TRUE);
                 }
+
+                break;
         }
     }
 }
