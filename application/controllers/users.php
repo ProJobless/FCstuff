@@ -44,9 +44,9 @@ class Users extends CI_Controller {
 
         // Is everything valid?
         if (is_valid('name', $name)
-            && is_valid('email', $email)
-            && is_valid('password', $password)
-            && is_valid('captcha', $captcha))
+         && is_valid('email', $email)
+         && is_valid('password', $password)
+         && is_valid('captcha', $captcha))
         {
             $data = array(
                 'username'           => generate_username($email),
@@ -80,7 +80,7 @@ class Users extends CI_Controller {
             ));
 
             // Login the user.
-            login($user[0]['user_id'], TRUE);
+            login($user_id, TRUE);
 
             // Set a session variable for displaying welcome message.
             $this->session->set_flashdata('welcome', TRUE);
@@ -161,6 +161,9 @@ class Users extends CI_Controller {
         // Get the new password from $_POST;
         $password = $this->input->post('password');
 
+        // Assume that password recovery failed.
+        $this->session->set_flashdata('recovery_failed', TRUE);
+
         // Is everything valid?
         if (is_valid('user_id', $user_id)
             && is_valid('md5', $recovery_key)
@@ -175,6 +178,9 @@ class Users extends CI_Controller {
                 && $user[0]['recovery_key'] == $recovery_key
                 && $user[0]['type'] != 'deleted')
             {
+                // Recovery was successful. Awesome!
+                $this->session->set_flashdata('recovery_failed', FALSE);
+
                 // Update the password and set a new recovery key.
                 $this->user->update($user_id, array(
                     'password'     => $this->phpass->hash($password),
@@ -257,6 +263,8 @@ class Users extends CI_Controller {
                         }
                     }
 
+                    break;
+
                 // --------------------------------------------------------
 
                 case 'email':
@@ -269,6 +277,8 @@ class Users extends CI_Controller {
                             'verification_key' => md5(rand())
                         ));
                     }
+
+                    break;
             }
         }
 
