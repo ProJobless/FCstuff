@@ -179,6 +179,51 @@ class Posts extends CI_Controller {
             proceed('pages/feed');
         }
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Delete a post.
+     *
+     * @access   public
+     * @param    int      Post id
+     * @param    string
+     */
+    public function delete($post_id = '', $ajax = FALSE)
+    {
+        // Check if user is logged in.
+        if ($user = $this->session->userdata('user'))
+        {
+            // Check if post exists.
+            if ($post = $this->post->read($post_id))
+            {
+                // Check if the current user made the post.
+                if ($post[0]['user_id'] == $user['user_id'])
+                {
+                    // Delete the post.
+                    $this->post->delete($post_id);
+
+                    // Decrese user's reputation by -1.
+                    $this->load->model('user');
+                    $this->user->update($user['user_id'], array(
+                        'reputation' => $user['reputation'] - 1
+                    ));
+
+                    // Output TRUE for AJAX requests.
+                    if ($ajax)
+                    {
+                        $this->output->set_output(TRUE);
+                    }
+                }
+            }
+        }
+
+        // Redirect for non-AJAX requests.
+        if ( ! $ajax)
+        {
+            proceed('pages/feed');
+        }
+    }
 }
 
 /* End of file posts.php */
