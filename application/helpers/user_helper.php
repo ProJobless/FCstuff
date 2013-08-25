@@ -212,7 +212,7 @@ if ( ! function_exists('update_session_array'))
             $new_user_data = $CI->user->read($user['user_id']);
 
             // Update user array.
-            $CI->session->set_userdata('user', $new_user_data);
+            $CI->session->set_userdata('user', $new_user_data[0]);
         }
     }
 }
@@ -249,7 +249,7 @@ if ( ! function_exists('try_to_unban'))
                 {
                     $CI->load->model('user');
 
-                    // Update user deatils in database.
+                    // Update user details in database.
                     $CI->user->update($user['user_id'], array(
                         'type' => 'standard'
                     ));
