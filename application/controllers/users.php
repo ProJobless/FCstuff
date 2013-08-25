@@ -361,7 +361,7 @@ class Users extends CI_Controller {
             }
         }
 
-        update_user_array();
+        update_session_array();
 
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
