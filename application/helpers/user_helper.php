@@ -189,5 +189,33 @@ if ( ! function_exists('logout'))
     }
 }
 
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('update_session_array'))
+{
+    /**
+     * Update the user array in $_SESSION.
+     *
+     * @access   public
+     */
+    function update_session_array()
+    {
+        $CI = get_instance();
+
+        // Check if the user is logged in.
+        if ($user = $CI->session->userdata('user'))
+        {
+            // Load User model.
+            $CI->load->model('user');
+
+            // Get new data.
+            $new_user_data = $CI->user->read($user['user_id']);
+
+            // Update user array.
+            $CI->session->set_userdata('user', $new_user_data);
+        }
+    }
+}
+
 /* End of file user_helper.php */
 /* File location : ./application/helpers/user_helper.php */
