@@ -23,6 +23,8 @@ class Posts extends CI_Controller {
         $this->load->model('post');
 
         authenticate_cookie();
+        update_user_array();
+        try_to_unban();
     }
 
     // --------------------------------------------------------------------
