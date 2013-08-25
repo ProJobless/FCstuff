@@ -82,17 +82,7 @@ class Authentication extends CI_Controller {
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
         {
-            // Is an URL provided?
-            if ($url = $this->input->get('continue'))
-            {
-                redirect($url);
-            }
-
-            // Redirect to home if an URL isn't provided.
-            else
-            {
-                redirect('/');
-            }
+            proceed('/');
         }
     }
 
@@ -123,16 +113,10 @@ class Authentication extends CI_Controller {
             $this->output->set_output(TRUE);
         }
 
-        // Else, proceed to the provided URL.
-        elseif ($url = $this->input->get('continue'))
-        {
-            redirect($url);
-        }
-
-        // Else, proceed to home.
+        // Redirect for non-AJAX requests.
         else
         {
-            redirect('/');
+            proceed('/');
         }
     }
 }
