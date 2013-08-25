@@ -23,42 +23,45 @@ if ( ! function_exists('authenticate_cookie'))
     {
         $CI = get_instance();
 
-        $CI->load->model('cookie');
-        $CI->load->model('user');
-
-        $cookie = $CI->input->cookie('token');
-        $CI->input->set_cookie('token', '');
-        $cookie = explode('$', $cookie);
-
-        if (count($cookie) == 2)
+        if ( ! $CI->session->userdata('user'))
         {
-            // Extract user_id and token from the cookie.
-            $user_id = $cookie[0];
-            $token   = $cookie[1];
+            $CI->load->model('cookie');
+            $CI->load->model('user');
 
-            // Check if token is valid.
-            $auth = $CI->cookie->read($user_id, $token);
+            $cookie = $CI->input->cookie('token');
+            $CI->input->set_cookie('token', '');
+            $cookie = explode('$', $cookie);
 
-            if ($auth)
+            if (count($cookie) == 2)
             {
-                // Set user data as session array.
-                $user = $CI->user->read($auth[0]['user_id']);
-                $CI->session->set_userdata('user', $user[0]);
+                // Extract user_id and token from the cookie.
+                $user_id = $cookie[0];
+                $token   = $cookie[1];
 
-                $token = md5(rand());
-                $ip_address = $CI->input->ip_address();
-                $user_agent = substr($CI->input->user_agent(), 0, 300);
-                $cookie = $user_id . '$' . $token;
+                // Check if token is valid.
+                $auth = $CI->cookie->read($user_id, $token);
 
-                // Update token in database.
-                $CI->cookie->update($auth[0]['cookie_id'], array(
-                    'token'      => $token,
-                    'ip_address' => $ip_address,
-                    'user_agent' => $user_agent
-                ));
+                if ($auth)
+                {
+                    // Set user data as session array.
+                    $user = $CI->user->read($auth[0]['user_id']);
+                    $CI->session->set_userdata('user', $user[0]);
 
-                // Update token in the cookie.
-                $CI->input->set_cookie('token', $cookie, 2592000);
+                    $token = md5(rand());
+                    $ip_address = $CI->input->ip_address();
+                    $user_agent = substr($CI->input->user_agent(), 0, 300);
+                    $cookie = $user_id . '$' . $token;
+
+                    // Update token in database.
+                    $CI->cookie->update($auth[0]['cookie_id'], array(
+                        'token'      => $token,
+                        'ip_address' => $ip_address,
+                        'user_agent' => $user_agent
+                    ));
+
+                    // Update token in the cookie.
+                    $CI->input->set_cookie('token', $cookie, 2592000);
+                }
             }
         }
     }
