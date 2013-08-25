@@ -217,5 +217,50 @@ if ( ! function_exists('update_session_array'))
     }
 }
 
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('try_to_unban'))
+{
+    /**
+     * Un-Ban the user if the ban has expired.
+     *
+     * @access   public
+     */
+    function try_to_unban()
+    {
+        $CI = get_instance();
+
+        // Check if the user is logged in.
+        if ($user = $CI->session->userdata('user'))
+        {
+            // Check if the user is banned.
+            if ($user['type'] == 'banned')
+            {
+                // Load Ban model.
+                $CI->load->model('ban');
+
+                // Get the ban expiration timestamp and current timestamp.
+                $ban = $CI->ban->read($user['user_id']);
+                $ban_expire   = strtotime($ban[0]['expire']);
+                $current_time = strtotime(gmdate('Y-m-d H:i:s'));
+
+                // Has the ban expired?
+                if ($ban_expire < $current_time)
+                {
+                    $CI->load->model('user');
+
+                    // Update user deatils in database.
+                    $CI->user->update($user['user_id'], array(
+                        'type' => 'standard'
+                    ));
+
+                    // Update session array.
+                    update_session_array();
+                }
+            }
+        }
+    }
+}
+
 /* End of file user_helper.php */
 /* File location : ./application/helpers/user_helper.php */
