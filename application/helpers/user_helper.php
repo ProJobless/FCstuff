@@ -123,5 +123,29 @@ if ( ! function_exists('update_last_seen_timestamp'))
     }
 }
 
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('logout'))
+{
+    /**
+     * Logout user.
+     *
+     * @access   public
+     */
+    function logout()
+    {
+        $CI = get_instance();
+
+        // Update the last seen timestamp.
+        update_last_seen_timestamp();
+
+        // Remove user array from $_SESSION.
+        $CI->session->unset_userdata('user');
+
+        // Remove cookies.
+        delete_cookie();
+    }
+}
+
 /* End of file user_helper.php */
 /* File location : ./application/helpers/user_helper.php */
