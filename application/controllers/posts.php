@@ -21,6 +21,8 @@ class Posts extends CI_Controller {
         parent::__construct();
 
         $this->load->model('post');
+
+        authenticate_cookie();
     }
 }
 
