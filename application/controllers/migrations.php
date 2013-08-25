@@ -60,6 +60,8 @@ class Migrations extends CI_Controller {
 
         $this->migration->version(0);
         echo "Rollback successful.";
+
+        proceed();
     }
 }
 
