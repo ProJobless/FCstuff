@@ -56,6 +56,9 @@ class Users extends CI_Controller {
                     // Login was successful. Hurray!
                     $this->session->set_flashdata('login_failed', FALSE);
 
+                    // Try to un-ban the user, if banned.
+                    try_to_unban();
+
                     // Output TRUE for AJAX requests.
                     if ($ajax)
                     {
@@ -292,6 +295,7 @@ class Users extends CI_Controller {
     public function edit($item = '', $ajax = FALSE)
     {
         authenticate_cookie();
+        try_to_unban();
 
         log_access('users', 'edit');
 
@@ -356,6 +360,8 @@ class Users extends CI_Controller {
                     break;
             }
         }
+
+        update_user_array();
 
         // Redirect if this isn't an ajax request.
         if ( ! $ajax)
