@@ -52,6 +52,32 @@ class Comment extends CI_Model {
     // --------------------------------------------------------------------
 
     /**
+     * Return comments by a user.
+     *
+     * @access   public
+     * @param    int
+     * @param    int
+     * @return   array
+     */
+    public function user($user_id, $last_comment_id = FALSE)
+    {
+        $this->db->query("SET time_zone = '+00:00'");
+        $this->db->from('comments');
+        $this->db->select('');
+        $this->db->limit(15);
+        $this->db->where('user_id', $user_id);
+        if ($last_comment_id) {
+            $this->db->where('comment_id <', $last_comment_id);
+        }
+        $this->db->order_by('comment_id', 'desc');
+        $query = $this->db->get();
+
+        return $query->result_array();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Update an existing comment.
      *
      * @access   public
