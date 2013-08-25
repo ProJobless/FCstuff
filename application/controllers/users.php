@@ -191,10 +191,9 @@ class Users extends CI_Controller {
     {
         log_access('users', 'verify');
 
-        if (is_valid('user_id', $user_id) && is_valid('md5', $verification_key))
+        if ($user = $this->user->read($user_id)
+            && is_valid('md5', $verification_key))
         {
-            $user = $this->user->read($user_id);
-
             if ( ! $user[0]['verified']
                 && $user[0]['verification_key'] == $verification_key
                 && $user[0]['type'] != 'deleted')
@@ -243,13 +242,10 @@ class Users extends CI_Controller {
         $this->session->set_flashdata('recovery_failed', TRUE);
 
         // Is everything valid?
-        if (is_valid('user_id', $user_id)
+        if ($user = $this->user->read($user_id)
             && is_valid('md5', $recovery_key)
             && is_valid('password', $password))
         {
-            // Get user data.
-            $user = $this->user->read($user_id);
-
             // Check if the recovery key is valid, and if the user is verified
             // and the account is not deleted.
             if ($user[0]['verified']
