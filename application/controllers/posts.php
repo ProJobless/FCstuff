@@ -124,6 +124,61 @@ class Posts extends CI_Controller {
             proceed('pages/feed');
         }
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Edit an existing post.
+     *
+     * @access   public
+     * @param    string
+     */
+    public function edit($ajax = FALSE)
+    {
+        // Check if user is logged in.
+        if ($user = $this->session->userdata('user'))
+        {
+            //Grab stuff from $_POST.
+            $post_id = $this->input->post('post_id');
+            $content = $this->input->post('content');
+
+            // Check if everything is valid.
+            if (is_valid('id', $post_id)
+                && is_valid('post', $content)
+                && $user['type'] != 'banned')
+            {
+                // Load Post model.
+                $this->load->model('post');
+
+                // Check if the post exists.
+                if ($post = $this->post->read($post_id))
+                {
+                    // Check if the current user made the post.
+                    if ($post[0]['user_id'] == $user['user_id'])
+                    {
+                        // Update the post.
+                        $this->post->update($post_id, array(
+                            'content'                 => $content,
+                            'modified'                => TRUE,
+                            'last_modified_timestamp' => gmdate('Y-m-d H:i:s')
+                        ));
+
+                        // Output TRUE for AJAX requests.
+                        if ($ajax)
+                        {
+                            $this->output->set_output(TRUE);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Redirect for non-AJAX requests.
+        if ( ! $ajax)
+        {
+            proceed('pages/feed');
+        }
+    }
 }
 
 /* End of file posts.php */
