@@ -141,9 +141,6 @@ if ( ! function_exists('login'))
 
         $CI->load->model('user');
 
-        // Logout previously logged in user.
-        logout();
-
         $user = $CI->user->read($user_id);
 
         if ($user[0]['type'] != 'deleted')
@@ -153,6 +150,9 @@ if ( ! function_exists('login'))
 
             // Update the last seen timestamp.
             update_last_seen_timestamp();
+
+            // If banned, to unban the user if the ban has expired.
+            try_to_unban();
 
             // Set an authentication cookie.
             if ($cookie)
