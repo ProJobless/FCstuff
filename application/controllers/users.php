@@ -27,7 +27,7 @@ class Users extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
-     * Authenticate user.
+     * Handle an authentication request.
      *
      * @access   public
      * @param    string
@@ -36,43 +36,67 @@ class Users extends CI_Controller {
     {
         log_access('users', 'login');
 
-        // Assume that the login was unsuccessful.
-        $this->session->set_flashdata('login_failed', TRUE);
+        // Logout previously logged in users.
+        logout();
 
         // Grab stuff from $_POST.
         $identifier = $this->input->post('identifier');
         $password   = $this->input->post('password');
         $remember   = $this->input->post('remember');
 
-        // Does the user exist?
-        if ($identifier && $password && $user = $this->user->read($identifier))
+        // Was the authentication successful?
+        if ($user = $this->_login($identifier, $password, $remember))
         {
-            // Is the password correct?
-            if ($this->phpass->check($password, $user[0]['password']))
-            {
-                // Login the user.
-                if (login($user[0]['user_id'], $remember))
-                {
-                    // Login was successful. Hurray!
-                    $this->session->set_flashdata('login_failed', FALSE);
-
-                    // Try to un-ban the user, if banned.
-                    try_to_unban();
-
-                    // Output TRUE for AJAX requests.
-                    if ($ajax)
-                    {
-                        $this->output->set_output(TRUE);
-                    }
-                }
-            }
+            $response['success'] = TRUE;
         }
 
-        // Redirect if this isn't an ajax request.
+        else
+        {
+            $response['success'] = FALSE;
+            $this->session->set_flashdata('login_failed', TRUE);
+        }
+
+        // Redirect if this isn't an AJAX request.
         if ( ! $ajax)
         {
             proceed('/');
         }
+
+        // Return a JSON array for AJAX requests.
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Authenticate a user.
+     *
+     * @access   private
+     * @param    string    User identifier (user_id, email or username)
+     * @param    string    Password
+     * @param    bool      Flag for setting authentication cookie
+     * @return   bool      TRUE, if authentication was successful
+     */
+    private function _login($identifier, $password, $remember)
+    {
+        // Check if the user exists.
+        if ( ! $user = $this->user->read($identifier))
+        {
+            return FALSE;
+        }
+
+        // Check if the password is correct.
+        if ( ! $this->phpass->check($password, $user[0]['password']))
+        {
+            return FALSE;
+        }
+
+        // Check if login was successful.
+        if ( ! login($user[0]['user_id'], $remember))
+        {
+            return FALSE;
+        }
+
+        return TRUE;
     }
 
     // --------------------------------------------------------------------
