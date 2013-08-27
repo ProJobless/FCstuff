@@ -102,7 +102,7 @@ class Users extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
-     * Logout user.
+     * Handle a logout request.
      *
      * @access   public
      * @param    string
@@ -111,19 +111,19 @@ class Users extends CI_Controller {
     {
         log_access('users', 'logout');
 
+        // Logout the user.
         logout();
 
-        // Output TRUE for AJAX requests.
-        if ($ajax)
-        {
-            $this->output->set_output(TRUE);
-        }
-
-        // Redirect for non-AJAX requests.
-        else
+        // Redirect if this isn't an AJAX request.
+        if ( ! $ajax)
         {
             proceed('/');
         }
+
+        // Return a JSON array for AJAX requests.
+        $response['success'] = TRUE;
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
     }
 
     // --------------------------------------------------------------------
