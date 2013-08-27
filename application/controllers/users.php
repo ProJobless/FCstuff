@@ -178,7 +178,7 @@ class Users extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
-     * Create a new user.
+     * Handle requests for creating a new user.
      *
      * @access   public
      * @param    string
@@ -187,67 +187,108 @@ class Users extends CI_Controller {
     {
         log_access('users', 'create');
 
+        // Logout previously logged in users.
+        logout();
+
         // Grab stuff from $_POST.
         $name     = $this->input->post('name');
         $email    = $this->input->post('email');
         $password = $this->input->post('password');
         $captcha  = $this->input->post('captcha');
 
-        // Is everything valid?
-        if (is_valid('name', $name)
-         && is_valid('email', $email)
-         && is_valid('password', $password)
-         && is_valid('captcha', $captcha))
+        // Was the account successfully created?
+        if ($this->_create($name, $email, $password, $captcha))
         {
-            $data = array(
-                'username'           => generate_username($email),
-                'email'              => $email,
-                'password'           => $this->phpass->hash($password),
-                'name'               => ucwords(strtolower($name)),
-                'verification_key'   => md5(rand()),
-                'recovery_key'       => md5(rand()),
-                'unsubscription_key' => md5(rand()),
-                'last_seen'          => gmdate('Y-m-d H:i:s')
-            );
-
-            // Add the user to database.
-            $this->user->create($data);
-
-            // Get the user_id.
-            $user = $this->user->read($email);
-            $user_id = $user[0]['user_id'];
-
-            // Invalidate the used captcha.
-            $this->session->unset_userdata('captcha');
-
-            // Generate a profile picture.
-            if ( ! file_exists('user-content/' . $user_id))
-            {
-                mkdir('user-content/' . $user_id, 0777, TRUE);
-            }
-
-            $this->user->update($user_id, array(
-                'profile_picture' => generate_profile_picture($user_id)
-            ));
-
-            // Login the user.
-            login($user_id, TRUE);
-
-            // Set a session variable for displaying welcome message.
+            $response['success'] = TRUE;
             $this->session->set_flashdata('welcome', TRUE);
-
-            // Output TRUE for AJAX requests.
-            if ($ajax)
-            {
-                $this->output->set_output(TRUE);
-            }
         }
 
-        // Redirect if this isn't an ajax request.
+        else
+        {
+            $response['success'] = FALSE;
+        }
+
+        // Invalidate the used captcha.
+        $this->session->unset_userdata('captcha');
+
+        // Redirect if this isn't an AJAX request.
         if ( ! $ajax)
         {
             proceed('/');
         }
+
+        // Output a JSON array for AJAX requests.
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Create a new user account.
+     *
+     * @access   private
+     * @param    string    Name
+     * @param    string    Email address
+     * @param    string    Password
+     * @param    string    Captcha
+     * @return   bool
+     */
+    private function _create($name, $email, $password, $captcha)
+    {
+        // Check if the name is valid.
+        if ( ! is_valid('name', $name))
+        {
+            return FALSE;
+        }
+
+        // Check if the email address is valid.
+        if ( ! is_valid('email', $email))
+        {
+            return FALSE;
+        }
+
+        // Check if the password is valid.
+        if ( ! is_valid('password', $password))
+        {
+            return FALSE;
+        }
+
+        // Check if the captcha is valid.
+        if ( ! is_valid('captcha', $captcha))
+        {
+            return FALSE;
+        }
+
+        // Add the user to database.
+        $this->user->create(array(
+            'username'           => generate_username($email),
+            'email'              => $email,
+            'password'           => $this->phpass->hash($password),
+            'name'               => ucwords(strtolower($name)),
+            'verification_key'   => md5(rand()),
+            'recovery_key'       => md5(rand()),
+            'unsubscription_key' => md5(rand()),
+            'last_seen'          => gmdate('Y-m-d H:i:s')
+        ));
+
+        // Get the user_id.
+        $user = $this->user->read($email);
+        $user_id = $user[0]['user_id'];
+
+        // Generate a profile picture.
+        if ( ! file_exists('user-content/' . $user_id))
+        {
+            mkdir('user-content/' . $user_id, 0777, TRUE);
+        }
+
+        // Update user data.
+        $this->user->update($user_id, array(
+            'profile_picture' => generate_profile_picture($user_id)
+        ));
+
+        // Login the user.
+        login($user_id, TRUE);
+
+        return TRUE;
     }
 
     // --------------------------------------------------------------------
