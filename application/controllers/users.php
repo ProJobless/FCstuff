@@ -182,12 +182,12 @@ class Users extends CI_Controller {
     /**
      * Verify account.
      *
-     * @access   public
+     * @access   private
      * @param    int      User id
      * @param    string   The verification key
      * @param    string
      */
-    public function verify($user_id = '', $verification_key = '', $ajax = FALSE)
+    private function _verify($user_id = '', $verification_key = '', $ajax = FALSE)
     {
         log_access('users', 'verify');
 
@@ -226,12 +226,12 @@ class Users extends CI_Controller {
     /**
      * Recover account.
      *
-     * @access   public
+     * @access   private
      * @param    int      User id
      * @param    string   Recovery key
      * @param    string
      */
-    public function recover($user_id = '', $recovery_key = '', $ajax = FALSE)
+    private function _recover($user_id = '', $recovery_key = '', $ajax = FALSE)
     {
         log_access('users', 'recover');
 
