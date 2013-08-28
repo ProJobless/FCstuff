@@ -12,26 +12,34 @@
 class Validation extends CI_Controller {
 
     /**
-     * Output TRUE if the provided content is valid.
+     * Validate stuff.
      *
      * @access   public
      * @param    string
      */
-    public function check($type = '')
+    public function check()
     {
         log_access('validation', 'check');
 
-        // Update the last seen timestamp.
-        update_last_seen_timestamp();
-
-        // Get the content to validate from $_POST.
-        $content = $this->input->post('content');
+        // Get things from $_POST.
+        $content_type = $this->input->post('content_type');
+        $content      = $this->input->post('content');
 
         // Validate it.
-        if (is_valid($type, $content))
+        if (is_valid($content_type, $content))
         {
+            $response['success'] = TRUE;
             $this->output->set_output(TRUE);
         }
+
+        else
+        {
+            $response['success'] = FALSE;
+        }
+
+        // Return a JSON array.
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
     }
 }
 /* End of file validation.php */
