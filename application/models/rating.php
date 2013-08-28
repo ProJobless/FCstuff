@@ -29,23 +29,18 @@ class Rating extends CI_Model {
      * Return ratings for a post / comment.
      *
      * @access   public
-     * @param    string
      * @param    int
      * @param    int
      * @return   array
      */
-    public function read($content_type, $content_id, $last_rating_id = FALSE)
+    public function read($post_id, $user_id)
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('ratings');
-        $this->db->select('');
-        $this->db->where('type', $content_type);
-        $this->db->where('content_id', $content_id);
-        if ($last_rating_id) {
-            $this->db->where('rating_id <', $last_rating_id);
-        }
-        $this->db->limit(15);
-        $this->db->order_by('rating_id', 'desc');
+        $this->db->select('rating_id, post_id, user_id, rating, timestamp');
+        $this->db->where('post_id', $post_id);
+        $this->db->where('user_id', $user_id);
+        $this->db->limit(1);
         $query = $this->db->get();
 
         return $query->result_array();

@@ -36,7 +36,7 @@ class User extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('users');
-        $this->db->select('');
+        $this->db->select();
         $this->db->limit(1);
         $this->db->where('user_id', $identifier);
         $this->db->or_where('username', $identifier);
