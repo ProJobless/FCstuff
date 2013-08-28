@@ -347,88 +347,153 @@ class Users extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
-     * Edit profile.
+     * Handle requests for editing user data.
      *
      * @access   public
-     * @param    string   Item to edit
+     * @param    string
      * @param    string
      */
-    public function edit($item = '', $ajax = FALSE)
+    public function edit($content_type = '', $ajax = FALSE)
     {
+        log_access('users', 'edit');
+
         authenticate_cookie();
         try_to_unban();
 
-        log_access('users', 'edit');
-
         $content = $this->input->post('content');
 
-        // Is the user logged in?
-        if ($user = $this->session->userdata('user'))
+        if ($this->_edit($content_type, $content))
         {
-            // Get the user id.
-            $user_id = $user[0]['user_id'];
+            $response['success'] = TRUE;
+        }
 
-            switch ($item)
-            {
-                case 'username':
-                case 'name':
-                case 'birthday':
-                case 'about_me':
-                case 'gender':
+        else
+        {
+            $response['success'] = FALSE;
+        }
 
-                    if (is_valid($item, $content))
-                    {
-                        $this->user->update($user_id, array(
-                            $item => $content
-                        ));
-                    }
+        if ( ! $ajax)
+        {
+            proceed('pages/profile/me');
+        }
 
-                    break;
+        // Return a JSON array for AJAX requests.
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
 
-                // --------------------------------------------------------
+    /**
+     * Edit user data.
+     *
+     * @access   private
+     * @param    string    Type of content
+     * @param    string    The new content
+     */
+    private function _edit($content_type, $content)
+    {
+        // Check if the user is logged in.
+        if ( ! $user = $this->session->userdata('user'))
+        {
+            return FALSE;
+        }
 
-                case 'password':
+        // Get the user id.
+        $user_id = $user['user_id'];
 
-                    $password = $this->input->post('password');
 
-                    if ($this->phpass->check($password, $user['password']))
-                    {
-                        if (is_valid('password', $content))
-                        {
-                            $content = $this->phpass->hash($content);
+        switch ($content_type)
+        {
+            case 'username':
+            case 'name':
+            case 'birthday':
+            case 'about_me':
+            case 'gender':
 
-                            $this->user->update($user_id, array(
-                                'password' => $content
-                            ));
-                        }
-                    }
+                if ( ! is_valid($content_type, $content))
+                {
+                    return FALSE;
+                }
 
-                    break;
+                $this->user->update($user_id, array(
+                    $content_type => $content
+                ));
 
-                // --------------------------------------------------------
+                break;
 
-                case 'email':
+            // --------------------------------------------------------
 
-                    if (is_valid('email', $content))
-                    {
-                        $this->user->update($user_id, array(
-                            'email'            => $content,
-                            'verified'         => FALSE,
-                            'verification_key' => md5(rand())
-                        ));
-                    }
+            case 'password':
 
-                    break;
-            }
+                $password = $this->input->post('password');
+
+                if ( ! $this->phpass->check($password, $user['password']))
+                {
+                    return FALSE;
+                }
+
+                if ( ! is_valid('password', $content))
+                {
+                    return FALSE;
+                }
+
+                $this->user->update($user_id, array(
+                    'password' => $this->phpass->hash($content)
+                ));
+
+                break;
+
+            // --------------------------------------------------------
+
+            case 'email':
+
+                if ( ! is_valid('email', $content))
+                {
+                    return FALSE;
+                }
+
+                $this->user->update($user_id, array(
+                    'email'            => $content,
+                    'verified'         => FALSE,
+                    'verification_key' => md5(rand())
+                ));
+
+                break;
+
+            // --------------------------------------------------------
+
+            case 'profile_picture':
+
+                if ( ! isset($_FILES['image']))
+                {
+                    return FALSE;
+                }
+
+                $file_name = md5(rand());
+                $upload_path = './user-content/' . $user_id . '/';
+
+                // Load the Upload library.
+                $this->load->library('upload', array(
+                    'upload_path'   => $upload_path,
+                    'file_name'     => $file_name,
+                    'allowed_types' => 'jpg|png|gif',
+                    'max_size'      => '1024'
+                ));
+
+                // Did the upload fail?
+                if ( ! $this->upload->do_upload('image'))
+                {
+                    return FALSE;
+                }
+
+                // Update user data.
+                $this->user->update($user_id, array(
+                    'profile_picture' => generate_profile_picture($user_id)
+                ));
         }
 
         update_session_array();
 
-        // Redirect if this isn't an ajax request.
-        if ( ! $ajax)
-        {
-            proceed('/');
-        }
+        return TRUE;
     }
 
     // --------------------------------------------------------------------
