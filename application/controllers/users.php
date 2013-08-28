@@ -351,9 +351,8 @@ class Users extends CI_Controller {
      *
      * @access   public
      * @param    string
-     * @param    string
      */
-    public function edit($content_type = '', $ajax = FALSE)
+    public function edit($ajax = FALSE)
     {
         log_access('users', 'edit');
 
@@ -361,6 +360,7 @@ class Users extends CI_Controller {
         try_to_unban();
 
         $content = $this->input->post('content');
+        $content_type = $this->input->post('content_type');
 
         if ($this->_edit($content_type, $content))
         {
