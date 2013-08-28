@@ -19,7 +19,7 @@ class Migration_Populate_posts extends CI_Migration {
     public function up()
     {
         // Posts
-        for ($i = 1; $i <= 3; $i++)
+        for ($i = 1; $i <= 10; $i++)
         {
             // Users
             for ($j = 2; $j <= 6; $j++)
