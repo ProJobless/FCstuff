@@ -36,7 +36,7 @@ class Ban extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('ban');
-        $this->db->select('');
+        $this->db->select('ban_id, user_id, offence, initiator, timestamp, expire');
         $this->db->limit(1);
         $this->db->order_by('ban_id', 'DESC');
         $this->db->where('user_id', $user_id);
