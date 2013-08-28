@@ -37,7 +37,7 @@ class Cookie extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('cookies');
-        $this->db->select('');
+        $this->db->select('cookie_id, user_id, token, timestamp, ip_address, user_agent');
         $this->db->limit(1);
         $this->db->where('user_id', $user_id);
         $this->db->where('token', $token);
@@ -73,6 +73,7 @@ class Cookie extends CI_Model {
     public function delete($cookie_id)
     {
         $this->db->where('cookie_id', $cookie_id);
+        $this->db->limit(1);
         $this->db->delete('cookies');
     }
 
