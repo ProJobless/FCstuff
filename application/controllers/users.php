@@ -499,7 +499,7 @@ class Users extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
-     * Delete an account.
+     * Handle requests for deleting an account.
      *
      * @access   public
      * @param    string
@@ -512,75 +512,97 @@ class Users extends CI_Controller {
         $password = $this->input->post('password');
         $captcha  = $this->input->post('captcha');
 
-        // Is the user logged in?
-        if ($user = $this->session->userdata('user'))
+        if ($this->_delete($password, $captcha))
         {
-            // Are the password and captcha correct?
-            if ($this->phpass->check($password, $user['password'])
-             && is_valid('captcha', $captcha))
-            {
-
-                // Load models.
-                $this->load->model('post');
-                $this->load->model('comment');
-                $this->load->model('conversation');
-                $this->load->model('cookie');
-                $this->load->model('friend');
-                $this->load->model('notification');
-
-                $user_id = $user['user_id'];
-
-                // Set user as 'deleted'.
-                $this->user->update($user['user_id'], array(
-                    'type' => 'deleted'
-                ));
-
-                // Delete content uploaded by the user.
-                $this->load->helper('file');
-                delete_files('user-content/' . $user['user_id'] .'/');
-
-                // Delete all posts made by the user.
-                $this->post->delete_all($user_id);
-
-                // Delete all comments made by the user.
-                $this->comment->delete_all($user_id);
-
-                // Delete all conversations of the user.
-                $this->conversation->delete_all($user_id);
-
-                // Invalidate all authentication cookies.
-                $this->cookie->delete_all($user_id);
-
-                // Delete all friends.
-                $this->friend->delete_all($user_id);
-
-                // Delete all notifications for the user.
-                $this->notification->delete_all($user_id);
-
-                // Logout user.
-                logout();
-
-                // Invalidate the used captcha.
-                $this->session->unset_userdata('captcha');
-
-                // Output TRUE for AJAX requests.
-                if ($ajax)
-                {
-                    $this->output->set_output(TRUE);
-                }
-            }
-
-            else
-            {
-                $this->session->set_flashdata('invalid_password', TRUE);
-            }
+            $response['success'] = TRUE;
         }
 
-        // Redirect if this isn't an ajax request.
+        else
+        {
+            $response['success'] = FALSE;
+        }
+
         if ( ! $ajax)
         {
             proceed('/');
         }
+
+        // Invalidate the used captcha.
+        $this->session->unset_userdata('captcha');
+
+        // Return a JSON array for AJAX requests.
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Delete an account.
+     *
+     * @access   private
+     * @param    string
+     * @param    string
+     * @return   bool
+     */
+    private function _delete($password, $captcha)
+    {
+        // Is the user logged in?
+        if ( ! ($user = $this->session->userdata('user')))
+        {
+            return FALSE;
+        }
+
+        if ( ! $this->phpass->check($password, $user['password']))
+        {
+            $this->session->set_flashdata('invalid_password', TRUE);
+            return FALSE;
+        }
+
+        if ( ! is_valid('captcha', $captcha))
+        {
+            return FALSE;
+        }
+
+        $user_id = $user['user_id'];
+
+        // Load models.
+        $this->load->model('post');
+        $this->load->model('comment');
+        $this->load->model('conversation');
+        $this->load->model('cookie');
+        $this->load->model('friend');
+        $this->load->model('notification');
+
+        // Set user as 'deleted'.
+        $this->user->update($user['user_id'], array(
+            'type' => 'deleted'
+        ));
+
+        // Delete content uploaded by the user.
+        $this->load->helper('file');
+        delete_files('user-content/' . $user['user_id'] .'/');
+
+        // Delete all posts made by the user.
+        $this->post->delete_all($user_id);
+
+        // Delete all comments made by the user.
+        $this->comment->delete_all($user_id);
+
+        // Delete all conversations of the user.
+        $this->conversation->delete_all($user_id);
+
+        // Invalidate all authentication cookies.
+        $this->cookie->delete_all($user_id);
+
+        // Delete all friends.
+        $this->friend->delete_all($user_id);
+
+        // Delete all notifications for the user.
+        $this->notification->delete_all($user_id);
+
+        // Logout user.
+        logout();
+
+        return TRUE;
     }
 }
 
