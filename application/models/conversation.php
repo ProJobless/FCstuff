@@ -36,7 +36,7 @@ class Conversation extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('conversations');
-        $this->db->select();
+        $this->db->select('message_id, user_id, friend_id, type, message, timestamp, seen');
         $this->db->order_by('message_id', 'desc');
         $this->db->limit(15);
         $this->db->where('user_id', $user_id);
