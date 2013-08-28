@@ -129,55 +129,6 @@ class Users extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
-     * Handle requests for viewing data about a user.
-     *
-     * @access   public
-     * @param    string   Identifier
-     */
-    public function view($identifier = '')
-    {
-        log_access('users', 'view');
-
-        // If an identifier is not provided and a user is logged in, set the
-        // identifier as the logged in user's user_id.
-        if (empty($identifier) && $user = $this->session->userdata('user'))
-        {
-            $identifier = $user['user_id'];
-        }
-
-        // Does the user exist?
-        if ($user = $this->user->read($identifier))
-        {
-            // Remove sensitive information.
-            unset($user[0]['password']);
-            unset($user[0]['verification_key']);
-            unset($user[0]['recovery_key']);
-            unset($user[0]['unsubscribed']);
-            unset($user[0]['unsubscription_key']);
-            unset($user[0]['verification_key']);
-            unset($user[0]['timestamp']);
-            unset($user[0]['email']);
-            unset($user[0]['type']);
-            unset($user[0]['last_seen']);
-
-            // Set the response array.
-            $response['success'] = TRUE;
-            $response['user']    = $user[0];
-        }
-
-        else
-        {
-            $response['success'] = FALSE;
-        }
-
-        // Output a JSON array.
-        $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($response));
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * Handle requests for creating a new user.
      *
      * @access   public
