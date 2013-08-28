@@ -25,6 +25,7 @@ class Migration_Add_users extends CI_Migration {
             "password VARCHAR(200)",
             "name VARCHAR(30)",
             "reputation INT(10) DEFAULT '0' ",
+            "posts INT(10) DEFAULT '0' ",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
             "type VARCHAR(20) DEFAULT 'standard' ",
             "verified BOOLEAN DEFAULT FALSE",
