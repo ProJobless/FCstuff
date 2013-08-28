@@ -26,9 +26,6 @@ class Migration_Add_comments extends CI_Migration {
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
             "modified BOOLEAN DEFAULT FALSE",
             "last_modified_timestamp TIMESTAMP",
-            "last_comment_timestamp TIMESTAMP",
-            "rating_score INT(10)",
-            "rating_count INT(10)"
         ));
 
         $this->dbforge->add_key('comment_id', TRUE);
