@@ -30,7 +30,7 @@ class Posts extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
-     * Create a new post.
+     * Handle requests for making new posts.
      *
      * @access   public
      * @param    string
@@ -42,87 +42,99 @@ class Posts extends CI_Controller {
         // Get the post content from $_POST.
         $content = $this->input->post('content');
 
-        // Set default values.
-        $response = array(
-            'success' => '',
-            'wait'    => ''
-        );
-        $file_name = '';
-        $proceed = TRUE;
+        $response = $this->_create($content);
+
+        if ( ! $ajax)
+        {
+            proceed('/');
+        }
+
+        // Return a JSON array for AJAX requests.
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Create a new post.
+     *
+     * @access   private
+     * @param    string    Content of the post
+     * @return   array
+     */
+    private function _create($content)
+    {
+        $response['success'] = FALSE;
 
         // Is the user logged in?
-        if ($user = $this->session->userdata('user'))
+        if ( ! ($user = $this->session->userdata('user')))
         {
-            $user_id = $user['user_id'];
+            return $response;
+        }
 
-            // Is the post content valid and the user not banned?
-            if (is_valid('post', $content) && $user['type'] != 'banned')
+        if ($user['type'] == 'banned')
+        {
+            return $response;
+        }
+
+        $user_id = $user['user_id'];
+
+        if ( ! is_valid('post', $content))
+        {
+            return $response;
+        }
+
+        // Get array of posts made by the user.
+        $posts = $this->post->user($user_id);
+
+        if ($posts[0])
+        {
+            $last_post_timestamp = strtotime($posts[0]['timestamp']);
+            $current_timestamp   = strtotime(gmdate('Y-m-d H:i:s'));
+
+            $diff = $current_timestamp - $last_post_timestamp;
+
+            // Was the last post made in the last 15 seconds?
+            if ($diff <= 15)
             {
-                // Get array of posts made by the user.
-                $posts = $this->post->user($user_id);
+                $response['wait'] = 15 - $diff;
 
-                if ($posts[0])
-                {
-                    $last_post_timestamp = strtotime($posts[0]['timestamp']);
-                    $current_timestamp   = strtotime(gmdate('Y-m-d H:i:s'));
-
-                    $diff = $current_timestamp - $last_post_timestamp;
-
-                    // Was the last post made in the last 15 seconds?
-                    if ($diff <= 15)
-                    {
-                        $proceed = FALSE;
-                        $response['wait'] = 15 - $diff;
-                    }
-                }
-
-                // Has the user uploaded an image with the post?
-                if ($proceed && isset($_FILES['image']))
-                {
-                    $file_name = md5(rand());
-                    $upload_path = './user-content/' . $user_id . '/';
-
-                    // Load the Upload library.
-                    $this->load->library('upload', array(
-                        'upload_path'   => $upload_path,
-                        'file_name'     => $file_name,
-                        'allowed_types' => 'jpg|png|gif',
-                        'max_size'      => '1024'
-                    ));
-
-                    // Did the upload fail?
-                    if ( ! $this->upload->do_upload('image'))
-                    {
-                        $proceed = FALSE;
-                    }
-                }
-
-                // Is everything fine till now?
-                if ($proceed)
-                {
-                    // Insert the new post in the database.
-                    $this->post->create(array(
-                        'user_id' => $user['user_id'],
-                        'content' => $content,
-                        'image'   => $file_name
-                    ));
-
-                    $response['success'] = TRUE;
-                }
+                return $response;
             }
         }
 
-        // Respond with JSON for AJAX requests.
-        if ($ajax)
+        $file_name = '';
+
+        // Has the user uploaded an image with the post?
+        if (isset($_FILES['image']))
         {
-            $this->output->set_output(json_encode($response));
+            $file_name = md5(rand());
+            $upload_path = './user-content/' . $user_id . '/';
+
+            // Load the Upload library.
+            $this->load->library('upload', array(
+                'upload_path'   => $upload_path,
+                'file_name'     => $file_name,
+                'allowed_types' => 'jpg|png|gif',
+                'max_size'      => '1024'
+            ));
+
+            // Did the upload fail?
+            if ( ! $this->upload->do_upload('image'))
+            {
+                return $response;
+            }
         }
 
-        // Redirect for non-AJAX requests.
-        else
-        {
-            proceed('pages/feed');
-        }
+        // Insert the new post in the database.
+        $this->post->create(array(
+            'user_id' => $user['user_id'],
+            'content' => $content,
+            'image'   => $file_name
+        ));
+
+        $response['success'] = TRUE;
+
+        return $response;
     }
 
     // --------------------------------------------------------------------
