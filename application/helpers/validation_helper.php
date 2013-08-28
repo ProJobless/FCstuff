@@ -183,7 +183,7 @@ if ( ! function_exists('is_valid'))
                     return FALSE;
                 }
 
-                if ( ! date("Y") - $year < 100))
+                if ( ! date("Y") - $year < 100)
                 {
                     return FALSE;
                 }
