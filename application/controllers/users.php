@@ -400,7 +400,6 @@ class Users extends CI_Controller {
         // Get the user id.
         $user_id = $user['user_id'];
 
-
         switch ($content_type)
         {
             case 'username':
@@ -489,6 +488,10 @@ class Users extends CI_Controller {
                 $this->user->update($user_id, array(
                     'profile_picture' => generate_profile_picture($user_id)
                 ));
+
+            default:
+
+                return FALSE;
         }
 
         update_session_array();

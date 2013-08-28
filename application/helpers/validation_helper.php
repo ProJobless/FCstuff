@@ -129,6 +129,11 @@ if ( ! function_exists('is_valid'))
                     return FALSE;
                 }
 
+                if (str_word_count($content) < 2)
+                {
+                    return FALSE;
+                }
+
                 if (str_word_count($content) > 3)
                 {
                     return FALSE;
