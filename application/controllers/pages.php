@@ -44,24 +44,10 @@ class Pages extends CI_Controller {
             $identifier = $user['user_id'];
         }
 
-        // Does the user exist?
-        if ($user = $this->user->read($identifier))
+        if ($user = $this->_profile($identifier))
         {
-            // Remove sensitive information.
-            unset($user[0]['password']);
-            unset($user[0]['verification_key']);
-            unset($user[0]['recovery_key']);
-            unset($user[0]['unsubscribed']);
-            unset($user[0]['unsubscription_key']);
-            unset($user[0]['verification_key']);
-            unset($user[0]['timestamp']);
-            unset($user[0]['email']);
-            unset($user[0]['type']);
-            unset($user[0]['last_seen']);
-
-            // Set the response array.
             $response['success'] = TRUE;
-            $response['user']    = $user[0];
+            $response['user']    = $user;
         }
 
         else
@@ -80,6 +66,36 @@ class Pages extends CI_Controller {
         {
             // Display a page showing the user's profile.
         }
+    }
+
+    /**
+     * Return user data.
+     *
+     * @access   private
+     * @param    string    User identifier
+     * @return   array
+     */
+    private function _profile($identifier)
+    {
+        // Does the user exist?
+        if ( ! ($user = $this->user->read($identifier)))
+        {
+            return FALSE;
+        }
+
+        // Remove sensitive information.
+        unset($user[0]['password']);
+        unset($user[0]['verification_key']);
+        unset($user[0]['recovery_key']);
+        unset($user[0]['unsubscribed']);
+        unset($user[0]['unsubscription_key']);
+        unset($user[0]['verification_key']);
+        unset($user[0]['timestamp']);
+        unset($user[0]['email']);
+        unset($user[0]['type']);
+        unset($user[0]['last_seen']);
+
+        return $user[0];
     }
 
     // --------------------------------------------------------------------
