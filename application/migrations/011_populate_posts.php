@@ -26,8 +26,9 @@ class Migration_Populate_posts extends CI_Migration {
             {
                 $content = "This is post $i made by user $j.";
                 $this->db->insert('posts', array(
-                    'user_id'   => $j,
-                    'content'   => $content,
+                    'user_id'      => $j,
+                    'content'      => $content,
+                    'comments '    => rand(0, 500),
                     'rating_score' => rand(200, 500),
                     'rating_count' => rand(0, 100)
                 ));
