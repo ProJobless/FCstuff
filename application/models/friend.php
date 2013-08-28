@@ -37,7 +37,7 @@ class Friend extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('friends');
-        $this->db->select('');
+        $this->db->select('relationship_id, user_id, friend_id, status, timestamp');
         $this->db->limit(1);
         $this->db->where('user_id', $user_id);
         $this->db->where('friend_id', $friend_id);
@@ -60,7 +60,7 @@ class Friend extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('friends');
-        $this->db->select('');
+        $this->db->select('relationship_id, user_id, friend_id, status, timestamp');
         $this->db->limit(1);
         $this->db->where('user_id', $user_id);
         $this->db->where('friend_id', $friend_id);
@@ -79,11 +79,14 @@ class Friend extends CI_Model {
      *
      * @access   public
      * @param    int
+     * @param    int
      * @param    array
      */
-    public function update($relationship_id, $data)
+    public function update($user_id, $friend_id, $data)
     {
-        $this->db->where('relationship_id', $relationship_id);
+        $this->db->where('user_id', $user_id);
+        $this->db->where('friend_id', $friend_id);
+        $this->db->limit(1);
         $this->db->update('friends', $data);
     }
 
@@ -94,10 +97,13 @@ class Friend extends CI_Model {
      *
      * @access   public
      * @param    int
+     * @param    int
      */
-    public function delete($relationship_id)
+    public function delete($user_id, $friend_id)
     {
-        $this->db->where('relationship_id', $relationship_id);
+        $this->db->where('user_id', $user_id);
+        $this->db->where('friend_id', $friend_id);
+        $this->db->limit(1);
         $this->db->delete('friends');
     }
 
