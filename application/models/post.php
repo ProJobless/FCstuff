@@ -36,7 +36,7 @@ class Post extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('posts');
-        $this->db->select('');
+        $this->db->select('post_id, user_id, content, image, timestamp, modified, last_modified_timestamp, last_comment_timestamp, rating_score, rating_count');
         $this->db->limit(1);
         $this->db->where('post_id', $post_id);
         $query = $this->db->get();
@@ -58,7 +58,7 @@ class Post extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('posts');
-        $this->db->select();
+        $this->db->select('post_id, user_id, content, image, timestamp, modified, last_modified_timestamp, last_comment_timestamp, rating_score, rating_count');
         $this->db->order_by('post_id', 'desc');
         $this->db->limit(15);
         $this->db->where('user_id', $user_id);
@@ -83,7 +83,7 @@ class Post extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('posts');
-        $this->db->select('');
+        $this->db->select('post_id, user_id, content, image, timestamp, modified, last_modified_timestamp, last_comment_timestamp, rating_score, rating_count');
         $this->db->order_by('post_id', 'desc');
         $this->db->limit(15);
         if ($last_post_id) {
