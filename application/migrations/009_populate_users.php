@@ -46,6 +46,7 @@ class Migration_Populate_users extends CI_Migration {
         $data['name']             = 'Awesome Admin';
         $data['reputation']       = rand(0, 1000);
         $data['posts']            = rand(0, 1000);
+        $data['friends']          = rand(0, 500);
         $data['gender']           = 'm';
         $data['about_me']         = 'I am the awesome admin!';
         $data['type']             = 'admin';
