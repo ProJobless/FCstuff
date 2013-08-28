@@ -22,24 +22,12 @@ class Migration_Populate_ratings extends CI_Migration {
         for ($i = 2; $i <= 6; $i++)
         {
             // Posts
-            for ($j = 1; $j < 5; $j++)
+            for ($j = 1; $j <= 10; $j++)
             {
                 $this->db->insert('ratings', array(
-                    'content_id' => $j,
-                    'type'       => 'post',
-                    'user_id'    => $i,
-                    'rating'     => rand(0, 5)
-                ));
-            }
-
-            // Comments
-            for ($j = 1; $j < 5; $j++)
-            {
-                $this->db->insert('ratings', array(
-                    'content_id' => $j,
-                    'type'       => 'comment',
-                    'user_id'    => $i,
-                    'rating'     => rand(0, 5)
+                    'post_id' => $j,
+                    'user_id' => $i,
+                    'rating'  => rand(0, 5)
                 ));
             }
         }
