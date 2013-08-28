@@ -22,7 +22,7 @@ if ( ! function_exists('is_valid'))
      * @param    string   Content
      * @return   boolean  TRUE if content is valid
      */
-    function is_valid($type, $content)
+    function is_valid($type = '', $content = '')
     {
         $CI = get_instance();
 
@@ -31,187 +31,213 @@ if ( ! function_exists('is_valid'))
         switch ($type)
         {
             case 'id':
-            case 'user_id':
-            case 'ban_id':
-            case 'comment_id':
-            case 'message_id':
-            case 'cookie_id':
-            case 'relationship_id':
-            case 'log_id':
-            case 'notification_id':
-            case 'post_id':
-            case 'rating_id':
 
-                if (strlen($content) > 0
-                 && strlen($content) <= 10
-                 && is_numeric($content))
+                if ( ! is_numeric($content))
                 {
-                    return TRUE;
+                    return FALSE;
                 }
 
+                if (empty($content))
+                {
+                    return FALSE;
+                }
+
+                if (strlen($content) > 10)
+                {
+                    return FALSE;
+                }
+
+                return TRUE;
                 break;
 
             // ------------------------------------------------------------
 
             case 'username':
 
-                if ( ! $CI->user->read($content)
-                 && strlen($content) > 0
-                 && strlen($content) <= 30)
+                $CI->session->set_flashdata('username_invalid', TRUE);
+
+                if ($CI->user->read($content))
                 {
-                    return TRUE;
+                    return FALSE;
                 }
 
-                else
+                if (empty($content))
                 {
-                    $CI->session->set_flashdata('invalid_username', TRUE);
+                    return FALSE;
                 }
 
+                if (strlen($content) > 30)
+                {
+                    return FALSE;
+                }
+
+                $CI->session->set_flashdata('username_invalid', FALSE);
+
+                return TRUE;
                 break;
 
             // ------------------------------------------------------------
 
             case 'email':
 
-                if ( ! $CI->user->read($content)
-                  && filter_var($content, FILTER_VALIDATE_EMAIL))
+                $CI->session->set_flashdata('email_invalid', TRUE);
+
+                if ($CI->user->read($content))
                 {
-                    return TRUE;
+                    return FALSE;
                 }
 
-                else
+                if ( ! filter_var($content, FILTER_VALIDATE_EMAIL))
                 {
-                    $CI->session->set_flashdata('invalid_email', TRUE);
+                    return FALSE;
                 }
 
+                $CI->session->set_flashdata('email_invalid', FALSE);
+
+                return TRUE;
                 break;
 
             // ------------------------------------------------------------
 
             case 'password':
 
-                if (strlen($content) > 0)
+                $CI->session->set_flashdata('password_invalid', TRUE);
+
+                if (empty($content))
                 {
-                    return TRUE;
+                    return FALSE;
                 }
 
-                else
+                if (strlen($content) < 4)
                 {
-                    $CI->session->set_flashdata('invalid_password', TRUE);
+                    return FALSE;
                 }
 
+                $CI->session->set_flashdata('password_invalid', FALSE);
+
+                return TRUE;
                 break;
 
             // ------------------------------------------------------------
 
             case 'name':
 
-                if (strlen($content) > 0
-                 && strlen($content) < 31
-                 && str_word_count($content) > 1
-                 && str_word_count($content) < 4)
+                $CI->session->set_flashdata('name_invalid', TRUE);
+
+                if (empty($content))
                 {
-                    return TRUE;
+                    return FALSE;
                 }
 
-                else
+                if (str_word_count($content) > 3)
                 {
-                    $CI->session->set_flashdata('invalid_name', TRUE);
+                    return FALSE;
                 }
 
+                if (strlen($content) > 30)
+                {
+                    return FALSE;
+                }
+
+                $CI->session->set_flashdata('name_invalid', FALSE);
+
+                return TRUE;
                 break;
 
             // ------------------------------------------------------------
 
             case 'md5':
-            case 'verification_key':
-            case 'recovery_key':
-            case 'unsubscription_key':
 
-                if (strlen($content) > 0 && strlen($content) <= 32)
+                if (empty($content))
                 {
-                    return TRUE;
+                    return FALSE;
                 }
 
+                if (strlen($content) > 32)
+                {
+                    return FALSE;
+                }
+
+                return TRUE;
                 break;
 
             // ------------------------------------------------------------
 
             case 'birthday':
 
+                $CI->session->set_flashdata('birthday_invalid', TRUE);
+
                 $birthday = explode('-', $content);
 
-                if (count($birthday) == 3)
+                if ( ! (count($birthday) == 3))
                 {
-                    $day   = $birthday[0];
-                    $month = $birthday[1];
-                    $year  = $birthday[2];
-
-                    if (checkdate($month, $day, $year)
-                     && date("Y") - $year < 100)
-                    {
-                        return TRUE;
-                    }
-
-                    else
-                    {
-                        $CI->session->set_flashdata('invalid_birthday', TRUE);
-                    }
+                    return FALSE;
                 }
 
-                else
+                $day   = $birthday[0];
+                $month = $birthday[1];
+                $year  = $birthday[2];
+
+                if ( ! checkdate($month, $day, $year))
                 {
-                    $CI->session->set_flashdata('invalid_birthday', TRUE);
+                    return FALSE;
                 }
 
+                if ( ! date("Y") - $year < 100))
+                {
+                    return FALSE;
+                }
+
+                $CI->session->set_flashdata('birthday_invalid', FALSE);
+
+                return TRUE;
                 break;
 
             // ------------------------------------------------------------
 
             case 'about_me':
 
-                if (strlen($content) > 0 && strlen($content) <= 500)
+                $CI->session->set_flashdata('about_me_invalid', TRUE);
+
+                if (empty($content))
                 {
-                    return TRUE;
+                    return FALSE;
                 }
 
-                else
+                if (strlen($content) > 500)
                 {
-                    $CI->session->set_flashdata('invalid_about_me', TRUE);
+                    return FALSE;
                 }
 
+                $CI->session->set_flashdata('about_me_invalid', FALSE);
+
+                return TRUE;
                 break;
 
             // ------------------------------------------------------------
 
             case 'gender':
 
-                if ($content == 'm' OR $content == 'f')
+                if ( ! ($content == 'm' OR $content == 'f'))
                 {
-                    return TRUE;
+                    $CI->session->set_flashdata('gender_invalid', TRUE);
+                    return FALSE;
                 }
 
-                else
-                {
-                    $CI->session->set_flashdata('invalid_gender', TRUE);
-                }
-
+                return TRUE;
                 break;
 
             // ------------------------------------------------------------
 
             case 'captcha':
 
-                if ($content == $CI->session->userdata('captcha'))
+                if ($content != $CI->session->userdata('captcha'))
                 {
-                    return TRUE;
+                    $CI->session->set_flashdata('captcha_invalid', TRUE);
+                    return FALSE;
                 }
 
-                else
-                {
-                    $CI->session->set_flashdata('invalid_captcha', TRUE);
-                }
-
+                return TRUE;
                 break;
 
             // ------------------------------------------------------------
@@ -219,16 +245,21 @@ if ( ! function_exists('is_valid'))
             case 'post':
             case 'comment':
 
-                if (strlen($content) > 0 && strlen($content) < 5000)
+                $CI->session->set_flashdata($type . '_invalid', TRUE);
+
+                if (empty($content))
                 {
-                    return TRUE;
+                    return FALSE;
                 }
 
-                else
+                if (strlen($content) > 1000)
                 {
-                    $CI->session->set_flashdata('invalid_' . $type, TRUE);
+                    return FALSE;
                 }
 
+                $CI->session->set_flashdata($type . '_invalid', FALSE);
+
+                return TRUE;
                 break;
         }
     }
