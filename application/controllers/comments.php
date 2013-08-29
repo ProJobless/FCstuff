@@ -20,11 +20,11 @@ class Comments extends CI_Controller {
     {
         parent::__construct();
 
+        $this->load->model('user');
         $this->load->model('post');
-        $this->load->model('comments');
+        $this->load->model('comment');
 
         authenticate_cookie();
-        update_session_array();
         try_to_unban();
     }
 }
