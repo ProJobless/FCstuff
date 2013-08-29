@@ -245,45 +245,67 @@ class Users extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
-     * Verify account.
+     * Handle requests for verifying a user account.
      *
-     * @access   private
+     * @access   public
      * @param    int      User id
      * @param    string   The verification key
-     * @param    string
      */
-    private function _verify($user_id = '', $verification_key = '', $ajax = FALSE)
+    public function verify($user_id = '', $key = '')
     {
         log_access('users', 'verify');
 
-        if ($user = $this->user->read($user_id)
-            && is_valid('md5', $verification_key))
+        logout();
+
+        if ($this->_verify($user_id, $key))
         {
-            if ( ! $user[0]['verified']
-                && $user[0]['verification_key'] == $verification_key
-                && $user[0]['type'] != 'deleted')
-            {
-                $this->user->update($user_id, array(
-                    'verified'         => TRUE,
-                    'verification_key' => md5(rand())
-                ));
-
-                // Login user.
-                login($user[0]['user_id'], TRUE);
-
-                // Output TRUE for AJAX requests.
-                if ($ajax)
-                {
-                    $this->output->set_output(TRUE);
-                }
-            }
+            login($user_id, TRUE);
         }
 
-        // Redirect if this isn't an ajax request.
-        if ( ! $ajax)
+        proceed('/');
+    }
+
+    /**
+     * Verify account.
+     *
+     * @access   private
+     * @param    int       User id
+     * @param    string    Verification key
+     * @return   bool
+     */
+    private function _verify($user_id, $key)
+    {
+        if ( ! is_valid('id', $user_id))
         {
-            proceed('/');
+            return FALSE;
         }
+
+        if ( ! is_valid('md5', $key))
+        {
+            return FALSE;
+        }
+
+        if ( ! ($user = $this->user->read($user_id)))
+        {
+            return FALSE;
+        }
+
+        if ($user[0]['type'] == 'deleted')
+        {
+            return FALSE;
+        }
+
+        if ($user[0]['verification_key'] != $key)
+        {
+            return FALSE;
+        }
+
+        $this->user->update($user_id, array(
+            'verified'         => TRUE,
+            'verification_key' => md5(rand())
+        ));
+
+        return TRUE;
     }
 
     // --------------------------------------------------------------------
