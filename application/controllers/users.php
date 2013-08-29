@@ -430,7 +430,7 @@ class Users extends CI_Controller {
 
         if ( ! $ajax)
         {
-            proceed('pages/profile/me');
+            proceed('people/me');
         }
 
         // Return a JSON array for AJAX requests.
