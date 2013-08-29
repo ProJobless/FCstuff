@@ -311,59 +311,93 @@ class Users extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
-     * Recover account.
+     * Handle requests for recovering user accounts.
      *
-     * @access   private
+     * @access   public
      * @param    int      User id
      * @param    string   Recovery key
      * @param    string
      */
-    private function _recover($user_id = '', $recovery_key = '', $ajax = FALSE)
+    public function recover($user_id = '', $recovery_key = '', $ajax = FALSE)
     {
         log_access('users', 'recover');
 
-        // Get the new password from $_POST;
+        logout();
+
         $password = $this->input->post('password');
 
-        // Assume that password recovery failed.
-        $this->session->set_flashdata('recovery_failed', TRUE);
-
-        // Is everything valid?
-        if ($user = $this->user->read($user_id)
-            && is_valid('md5', $recovery_key)
-            && is_valid('password', $password))
+        if ($this->_recover($user_id, $recovery_key, $password))
         {
-            // Check if the recovery key is valid, and if the user is verified
-            // and the account is not deleted.
-            if ($user[0]['verified']
-                && $user[0]['recovery_key'] == $recovery_key
-                && $user[0]['type'] != 'deleted')
-            {
-                // Recovery was successful. Awesome!
-                $this->session->set_flashdata('recovery_failed', FALSE);
-
-                // Update the password and set a new recovery key.
-                $this->user->update($user_id, array(
-                    'password'     => $this->phpass->hash($password),
-                    'recovery_key' => md5(rand())
-                ));
-
-                // Login user.
-                login($user[0]['user_id'], TRUE);
-
-                // Output TRUE for AJAX requests.
-                if ($ajax)
-                {
-                    $this->output->set_output(TRUE);
-                }
-            }
+            login($user_id, TRUE);
+            $response['success'] = TRUE;
         }
 
-        // Redirect if this isn't an ajax request.
+        else
+        {
+            $response['success'] = FALSE;
+        }
+
         if ( ! $ajax)
         {
             proceed('/');
         }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Recover a user account.
+     *
+     * @access   private
+     * @param    int       User id
+     * @param    string    Recovery key
+     * @param    string    New password
+     * @return   bool
+     */
+    private function _recover($user_id, $key, $password)
+    {
+        if ( ! is_valid('id', $user_id))
+        {
+            return FALSE;
+        }
+
+        if ( ! is_valid('md5', $key))
+        {
+            return FALSE;
+        }
+
+        if ( ! is_valid('password', $password))
+        {
+            return FALSE;
+        }
+
+        if ( ! ($user = $this->user->read($user_id)))
+        {
+            return FALSE;
+        }
+
+        if ($user[0]['type'] == 'deleted')
+        {
+            return FALSE;
+        }
+
+        if ( ! $user[0]['verified'])
+        {
+            return FALSE;
+        }
+
+        if ($user[0]['recovery_key'] != $key)
+        {
+            return FALSE;
+        }
+
+        $this->user->update($user_id, array(
+            'password'     => $this->phpass->hash($password),
+            'recovery_key' => md5(rand())
+        ));
+
+        return TRUE;
     }
 
     // --------------------------------------------------------------------
