@@ -239,43 +239,71 @@ class Posts extends CI_Controller {
      * Delete a post.
      *
      * @access   public
-     * @param    int      Post id
      * @param    string
      */
-    public function delete($post_id = '', $ajax = FALSE)
+    public function delete($ajax = FALSE)
     {
-        // Check if user is logged in.
-        if ($user = $this->session->userdata('user'))
+        log_access('posts', 'delete');
+
+        $post_id = $this->input->post('post_id');
+
+        if ($this->_delete($post_id))
         {
-            // Check if post exists.
-            if ($post = $this->post->read($post_id))
-            {
-                // Check if the current user made the post.
-                if ($post[0]['user_id'] == $user['user_id'])
-                {
-                    // Delete the post.
-                    $this->post->delete($post_id);
-
-                    // Decrese user's reputation by -1.
-                    $this->load->model('user');
-                    $this->user->update($user['user_id'], array(
-                        'reputation' => $user['reputation'] - 1
-                    ));
-
-                    // Output TRUE for AJAX requests.
-                    if ($ajax)
-                    {
-                        $this->output->set_output(TRUE);
-                    }
-                }
-            }
+            $response['success'] = TRUE;
         }
 
-        // Redirect for non-AJAX requests.
+        else
+        {
+            $response['success'] = FALSE;
+        }
+
         if ( ! $ajax)
         {
-            proceed('pages/feed');
+            proceed('/');
         }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Delete a post.
+     *
+     * @access   private
+     * @param    int       Post id
+     * @return   bool
+     */
+    private function _delete($post_id)
+    {
+        if ( ! is_valid('id', $post_id))
+        {
+            return FALSE;
+        }
+
+        if ( ! ($user = $this->session->userdata('user')))
+        {
+            return FALSE;
+        }
+
+        if ( ! ($post = $this->post->read($post_id)))
+        {
+            return FALSE;
+        }
+
+        if ($post[0]['user_id'] != $user['user_id'])
+        {
+            return FALSE;
+        }
+
+        $this->post->delete($post_id);
+
+        $this->user->update($user['user_id'], array(
+            'reputation' => $user['reputation'] - 5
+        ));
+
+        update_session_array();
+
+        return TRUE;
     }
 }
 
