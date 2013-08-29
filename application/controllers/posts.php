@@ -147,56 +147,90 @@ class Posts extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
-     * Edit an existing post.
+     * Handle requests for editing a post.
      *
      * @access   public
      * @param    string
      */
     public function edit($ajax = FALSE)
     {
-        // Check if user is logged in.
-        if ($user = $this->session->userdata('user'))
+        log_access('posts', 'edit');
+
+        $post_id = $this->input->post('post_id');
+        $content = $this->input->post('content');
+
+        if ($this->_edit($post_id, $content))
         {
-            //Grab stuff from $_POST.
-            $post_id = $this->input->post('post_id');
-            $content = $this->input->post('content');
-
-            // Check if everything is valid.
-            if (is_valid('id', $post_id)
-                && is_valid('post', $content)
-                && $user['type'] != 'banned')
-            {
-                // Load Post model.
-                $this->load->model('post');
-
-                // Check if the post exists.
-                if ($post = $this->post->read($post_id))
-                {
-                    // Check if the current user made the post.
-                    if ($post[0]['user_id'] == $user['user_id'])
-                    {
-                        // Update the post.
-                        $this->post->update($post_id, array(
-                            'content'                 => $content,
-                            'modified'                => TRUE,
-                            'last_modified_timestamp' => gmdate('Y-m-d H:i:s')
-                        ));
-
-                        // Output TRUE for AJAX requests.
-                        if ($ajax)
-                        {
-                            $this->output->set_output(TRUE);
-                        }
-                    }
-                }
-            }
+            $response['success'] = TRUE;
         }
 
-        // Redirect for non-AJAX requests.
+        else
+        {
+            $response['success'] = FALSE;
+        }
+
         if ( ! $ajax)
         {
-            proceed('pages/feed');
+            proceed('posts/' . $post_id);
         }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Edit an existing post.
+     *
+     * @access   private
+     * @param    string    Post id
+     * @param    string    New content
+     * @return   bool
+     */
+    private function _edit($post_id, $content)
+    {
+        if ( ! ($user = $this->session->userdata('user')))
+        {
+            return FALSE;
+        }
+
+        if ($user['type'] == 'banned')
+        {
+            return FALSE;
+        }
+
+        if ( ! is_valid('id', $post_id))
+        {
+            return FALSE;
+        }
+
+        if ( ! is_valid('post', $content))
+        {
+            return FALSE;
+        }
+
+        if ( ! ($post = $this->post->read($post_id)))
+        {
+            return FALSE;
+        }
+
+        if ($post[0]['user_id'] != $user['user_id'])
+        {
+            return FALSE;
+        }
+
+        $this->post->update($post_id, array(
+            'content'                 => $content,
+            'modified'                => TRUE,
+            'last_modified_timestamp' => gmdate('Y-m-d H:i:s')
+        ));
+
+        $this->user->update($user['user_id'], array(
+            'reputation' => $user['reputation'] - 2
+        ));
+
+        update_session_array();
+
+        return TRUE;
     }
 
     // --------------------------------------------------------------------
