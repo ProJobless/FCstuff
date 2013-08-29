@@ -20,10 +20,10 @@ class Posts extends CI_Controller {
     {
         parent::__construct();
 
+        $this->load->model('user');
         $this->load->model('post');
 
         authenticate_cookie();
-        update_session_array();
         try_to_unban();
     }
 
@@ -131,6 +131,13 @@ class Posts extends CI_Controller {
             'content' => $content,
             'image'   => $file_name
         ));
+
+        $this->user->update($user['user_id'], array(
+            'posts'      => $user['posts'] + 1,
+            'reputation' => $user['reputation'] + 5
+        ));
+
+        update_session_array();
 
         $response['success'] = TRUE;
 
