@@ -118,8 +118,99 @@ class Comments extends CI_Controller {
             'reputation' => $user['reputation'] + 2
         ));
 
+        update_session_array();
+
         $response['success'] = TRUE;
         return $response;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Handle requests for editing comments.
+     *
+     * @access   public
+     * @param    string
+     */
+    public function edit($ajax = FALSE)
+    {
+        log_access('comments', 'edit');
+
+        $comment_id = $this->input->post('comment_id');
+        $content    = $this->input->post('content');
+
+        if ($this->_edit($comment_id, $content))
+        {
+            $response['success'] = TRUE;
+        }
+
+        else
+        {
+            $response['success'] = FALSE;
+        }
+
+        if ( ! $ajax)
+        {
+            $comment = $this->comment->read($comment_id);
+
+            if ($post_id = $comment[0]['post_id'])
+            {
+                proceed('posts/' . $post_id);
+            }
+
+            else
+            {
+                proceed('/');
+            }
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Edit an existing comment.
+     *
+     * @access   private
+     * @param    int       Comment id
+     * @param    string    New content
+     * @return   bool
+     */
+    private function _edit($comment_id, $content)
+    {
+        if ( ! ($user = $this->session->userdata('user')))
+        {
+            return FALSE;
+        }
+
+        if ( ! is_valid('comment', $content))
+        {
+            return FALSE;
+        }
+
+        if ( ! ($comment = $this->comment->read($comment_id)))
+        {
+            return FALSE;
+        }
+
+        if ($comment[0]['user_id'] != $user['user_id'])
+        {
+            return FALSE;
+        }
+
+        $this->comment->update($comment_id, array(
+            'content'                 => $content,
+            'modified'                => TRUE,
+            'last_modified_timestamp' => gmdate('Y-m-d H:i:s')
+        ));
+
+        $this->user->update($user['user_id'], array(
+            'reputation' => $user['reputation'] - 1
+        ));
+
+        update_session_array();
+
+        return TRUE;
     }
 }
 
