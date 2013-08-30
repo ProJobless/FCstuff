@@ -212,6 +212,74 @@ class Comments extends CI_Controller {
 
         return TRUE;
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Handle requests for deleting comments.
+     *
+     * @access   public
+     * @param    string
+     */
+    public function delete($ajax = FALSE)
+    {
+        log_access('comments', 'delete');
+
+        $comment_id = $this->input->post('comment_id');
+
+        if ($this->_delete($comment_id))
+        {
+            $response['success'] = TRUE;
+        }
+
+        else
+        {
+            $response['success'] = FALSE;
+        }
+
+        if ( ! $ajax)
+        {
+            proceed('/');
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Delete a comment.
+     *
+     * @access   private
+     * @param    int       Comment id
+     * @return   bool
+     */
+    private function _delete($comment_id)
+    {
+        if ( ! ($user = $this->session->userdata('user')))
+        {
+            return FALSE;
+        }
+
+        if ( ! ($comment = $this->comment->read($comment_id)))
+        {
+            return FALSE;
+        }
+
+        if ( ! ($comment[0]['user_id'] == $user['user_id']))
+        {
+            return FALSE;
+        }
+
+        $this->comment->delete($comment_id);
+
+        $this->user->update($user['user_id'], array(
+            'reputation' => $user['reputation'] - 2
+        ));
+
+        update_session_array();
+
+        return TRUE;
+    }
 }
 
 /* End of file comments.php */
