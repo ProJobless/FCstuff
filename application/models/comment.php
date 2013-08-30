@@ -26,6 +26,27 @@ class Comment extends CI_Model {
     // --------------------------------------------------------------------
 
     /**
+     * Return details about a comment.
+     *
+     * @access   public
+     * @param    int
+     * @return   array
+     */
+    public function read($comment_id)
+    {
+        $this->db->query("SET time_zone = '+00:00'");
+        $this->db->from('comments');
+        $this->db->select('comment_id, post_id, user_id, content, timestamp, modified, last_modified_timestamp');
+        $this->db->limit(1);
+        $this->db->where('comment_id', $comment_id);
+        $query = $this->db->get();
+
+        return $query->result_array();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Return comments for a post.
      *
      * @access   public
@@ -33,11 +54,11 @@ class Comment extends CI_Model {
      * @param    int
      * @return   array
      */
-    public function read($post_id, $last_comment_id = FALSE)
+    public function post($post_id, $last_comment_id = FALSE)
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('comments');
-        $this->db->select('comment_id, post_id user_id, content, timestamp, modified, last_modified_timestamp');
+        $this->db->select('comment_id, post_id, user_id, content, timestamp, modified, last_modified_timestamp');
         $this->db->limit(15);
         $this->db->where('post_id', $post_id);
         if ($last_comment_id) {
@@ -63,7 +84,7 @@ class Comment extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('comments');
-        $this->db->select('comment_id, post_id user_id, content, timestamp, modified, last_modified_timestamp');
+        $this->db->select('comment_id, post_id, user_id, content, timestamp, modified, last_modified_timestamp');
         $this->db->order_by('comment_id', 'desc');
         $this->db->limit(15);
         $this->db->where('user_id', $user_id);
