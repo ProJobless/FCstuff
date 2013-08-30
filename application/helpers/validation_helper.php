@@ -266,6 +266,33 @@ if ( ! function_exists('is_valid'))
 
                 return TRUE;
                 break;
+
+            // ------------------------------------------------------------
+
+            case 'rating':
+
+                if (empty($content))
+                {
+                    return FALSE;
+                }
+
+                if ( ! is_numeric($content))
+                {
+                    return FALSE;
+                }
+
+                if ($content > 5)
+                {
+                    return FALSE;
+                }
+
+                if ($content < 1)
+                {
+                    return FALSE;
+                }
+
+                return TRUE;
+                break;
         }
     }
 }
