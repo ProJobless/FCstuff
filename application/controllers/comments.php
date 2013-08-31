@@ -88,7 +88,7 @@ class Comments extends CI_Controller {
 
         $comments = $this->comment->user($user['user_id']);
 
-        if ($comments[0])
+        if (isset($comments[0]))
         {
             $last_comment_time = strtotime($comments[0]['timestamp']);
             $current_time      = strtotime(gmdate('Y-m-d H:i:s'));
