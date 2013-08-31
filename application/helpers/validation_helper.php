@@ -249,6 +249,7 @@ if ( ! function_exists('is_valid'))
 
             case 'post':
             case 'comment':
+            case 'message':
 
                 $CI->session->set_flashdata($type . '_invalid', TRUE);
 
