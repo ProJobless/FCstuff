@@ -86,7 +86,7 @@ class Posts extends CI_Controller {
         // Get array of posts made by the user.
         $posts = $this->post->user($user_id);
 
-        if ($posts[0])
+        if (isset($posts[0]))
         {
             $last_post_timestamp = strtotime($posts[0]['timestamp']);
             $current_timestamp   = strtotime(gmdate('Y-m-d H:i:s'));
