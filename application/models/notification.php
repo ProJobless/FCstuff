@@ -26,6 +26,26 @@ class Notification extends CI_Model {
     // --------------------------------------------------------------------
 
     /**
+     * Return data about a notification.
+     *
+     * @access   public
+     * @param    int
+     * @return   array
+     */
+    public function read($id)
+    {
+        $this->db->query("SET time_zone = '+00:00'");
+        $this->db->from('notifications');
+        $this->db->select('notification_id, user_id, content, link, category, timestamp, seen');
+        $this->db->where('notification_id', $id);
+        $query = $this->db->get();
+
+        return $query->result_array();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Return notifications for a user.
      *
      * @access   public
@@ -34,7 +54,7 @@ class Notification extends CI_Model {
      * @param    int
      * @return   array
      */
-    public function read($user_id, $before = FALSE, $after = FALSE)
+    public function user($user_id, $before = FALSE, $after = FALSE)
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('notifications');
