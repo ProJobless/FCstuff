@@ -23,6 +23,7 @@ class Ratings extends CI_Controller {
         $this->load->model('user');
         $this->load->model('post');
         $this->load->model('rating');
+        $this->load->model('notification');
 
         authenticate_cookie();
         try_to_unban();
@@ -108,9 +109,33 @@ class Ratings extends CI_Controller {
 
             update_session_array();
 
-            $op = $this->user->read($post[0]['user_id']);
-            $this->user->update($post[0]['user_id'], array(
-                'reputation' => $op[0]['reputation'] + $rating_score
+            $this->notification->create(array(
+                'user_id'  => $user['user_id'],
+                'content'  => 'You got +' . $rating_score . ' reputation.',
+                'link'     => 'people/me',
+                'category' => 'reputation'
+            ));
+
+            if ( ! ($user['user_id'] == $post[0]['user_id']))
+            {
+                $op = $this->user->read($post[0]['user_id']);
+                $this->user->update($post[0]['user_id'], array(
+                    'reputation' => $op[0]['reputation'] + $rating_score
+                ));
+
+                $this->notification->create(array(
+                    'user_id'  => $post[0]['user_id'],
+                    'content'  => $user['name'] . ' gave your post a ' . $rating_score . ' star rating.',
+                    'link'     => 'posts/' . $post[0]['post_id'],
+                    'category' => 'rating'
+                ));
+            }
+
+            $this->notification->create(array(
+                'user_id'  => $post[0]['user_id'],
+                'content'  => 'You got +' . $rating_score . ' reputation.',
+                'link'     => 'people/me',
+                'category' => 'reputation'
             ));
         }
 

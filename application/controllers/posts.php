@@ -22,6 +22,7 @@ class Posts extends CI_Controller {
 
         $this->load->model('user');
         $this->load->model('post');
+        $this->load->model('notification');
 
         authenticate_cookie();
         try_to_unban();
@@ -135,6 +136,13 @@ class Posts extends CI_Controller {
         $this->user->update($user['user_id'], array(
             'posts'      => $user['posts'] + 1,
             'reputation' => $user['reputation'] + 5
+        ));
+
+        $this->notification->create(array(
+            'user_id'  => $user['user_id'],
+            'content'  => 'You got +5 reputation.',
+            'link'     => 'people/me',
+            'category' => 'reputation'
         ));
 
         update_session_array();

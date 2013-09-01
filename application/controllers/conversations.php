@@ -23,6 +23,7 @@ class Conversations extends CI_Controller {
         $this->load->model('user');
         $this->load->model('friend');
         $this->load->model('conversation');
+        $this->load->model('notification');
 
         authenticate_cookie();
         try_to_unban();
@@ -115,6 +116,20 @@ class Conversations extends CI_Controller {
             'type'      => 'received',
             'message'   => $message
         ));
+
+        $friend_last_seen = strtotime($friend[0]['last_seen']);
+        $current_time     = strtotime(gmdate('Y-m-d H:i:s'));
+        $diff             = $current_time - $friend_last_seen;
+
+        if ($diff > 40)
+        {
+            $this->notification->create(array(
+                'user_id'  => $friend_user_id,
+                'content'  => $user['name'] . ' sent you a new message : ' . $message,
+                'link'     => 'conversations/' . $user_id,
+                'category' => 'conversation',
+            ));
+        }
 
         return TRUE;
     }

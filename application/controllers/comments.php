@@ -23,6 +23,7 @@ class Comments extends CI_Controller {
         $this->load->model('user');
         $this->load->model('post');
         $this->load->model('comment');
+        $this->load->model('notification');
 
         authenticate_cookie();
         try_to_unban();
@@ -120,7 +121,25 @@ class Comments extends CI_Controller {
 
         update_session_array();
 
+        $this->notification->create(array(
+            'user_id'  => $user['user_id'],
+            'content'  => 'You got +2 reputation.',
+            'link'     => 'people/me',
+            'category' => 'reputation'
+        ));
+
+        if ( ! ($user['user_id'] == $post[0]['user_id']))
+        {
+            $this->notification->create(array(
+                'user_id'  => $post[0]['user_id'],
+                'content'  => $user['name'] . ' commented on your post : ' . $content,
+                'link'     => 'posts/' . $post[0]['post_id'],
+                'category' => 'comment'
+            ));
+        }
+
         $response['success'] = TRUE;
+
         return $response;
     }
 
@@ -204,12 +223,6 @@ class Comments extends CI_Controller {
             'last_modified_timestamp' => gmdate('Y-m-d H:i:s')
         ));
 
-        $this->user->update($user['user_id'], array(
-            'reputation' => $user['reputation'] - 1
-        ));
-
-        update_session_array();
-
         return TRUE;
     }
 
@@ -271,12 +284,6 @@ class Comments extends CI_Controller {
         }
 
         $this->comment->delete($comment_id);
-
-        $this->user->update($user['user_id'], array(
-            'reputation' => $user['reputation'] - 2
-        ));
-
-        update_session_array();
 
         return TRUE;
     }

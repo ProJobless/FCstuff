@@ -21,6 +21,7 @@ class Users extends CI_Controller {
         parent::__construct();
 
         $this->load->model('user');
+        $this->load->model('notification');
         $this->load->library('phpass');
     }
 
@@ -215,6 +216,7 @@ class Users extends CI_Controller {
             'email'              => $email,
             'password'           => $this->phpass->hash($password),
             'name'               => ucwords(strtolower($name)),
+            'reputation'         => 50,
             'verification_key'   => md5(rand()),
             'recovery_key'       => md5(rand()),
             'unsubscription_key' => md5(rand()),
@@ -234,6 +236,20 @@ class Users extends CI_Controller {
         // Update user data.
         $this->user->update($user_id, array(
             'profile_picture' => generate_profile_picture($user_id)
+        ));
+
+        $this->notification->create(array(
+            'user_id'  => $user_id,
+            'content'  => 'Thanks for joining FCstuff!',
+            'category' => 'welcome',
+            'link'     => '/'
+        ));
+
+        $this->notification->create(array(
+            'user_id'  => $user_id,
+            'content'  => 'You got +50 reputation.',
+            'link'     => 'people/me',
+            'category' => 'reputation'
         ));
 
         // Login the user.

@@ -22,6 +22,7 @@ class Friends extends CI_Controller {
 
         $this->load->model('user');
         $this->load->model('friend');
+        $this->load->model('notification');
 
         authenticate_cookie();
         try_to_unban();
@@ -103,6 +104,12 @@ class Friends extends CI_Controller {
             'status'    => 'req_received'
         ));
 
+        $this->notification->create(array(
+            'user_id'  => $friend_user_id,
+            'content'  => $user['name'] . ' wants to be your friend.',
+            'category' => 'friends'
+        ));
+
         return TRUE;
     }
 
@@ -181,6 +188,20 @@ class Friends extends CI_Controller {
 
         $this->friend->update($friend_user_id, $user['user_id'], array(
             'status' => 'friends'
+        ));
+
+        $this->notification->create(array(
+            'user_id'  => $friend_user_id,
+            'content'  => 'You are now friends with ' . $user['name'] . '.',
+            'link'     => 'people/' . $user['username'],
+            'category' => 'friends'
+        ));
+
+        $this->notification->create(array(
+            'user_id'  => $user['user_id'],
+            'content'  => 'You are now friends with ' . $friend[0]['name'] . '.',
+            'link'     => 'people/' . $friend[0]['username'],
+            'category' => 'friends'
         ));
 
         return TRUE;
