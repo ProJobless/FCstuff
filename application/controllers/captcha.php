@@ -4,7 +4,7 @@
  * CAPTCHA CONTROLLER
  *
  * @package    FCstuff
- * @category   Authentication
+ * @category   Security
  * @author     Abhijit Parida
  * @license    The MIT License (MIT)
  * @copyright  Copyright (c) 2013, FCstuff
@@ -18,6 +18,8 @@ class Captcha extends CI_Controller {
      */
     public function index()
     {
+        log_access('captcha', 'generate');
+
         // Generate captcha text.
         $this->load->helper('string');
         $text = strtolower(random_string('alpha', 5));
