@@ -6,80 +6,44 @@ An experimental social-networking website built on CodeIgniter.
 Requirements
 ------------
 
-* PHP version 5.3 or newer.
-* Mysql, mysqli, postgre, odbc, mssql, sqlite or oci8 database.
+* PHP 5.3 or newer.
+* MySQL 5.5 or newer.
 
-Configurations
---------------
+Getting Started
+---------------
 
-###Database connections
-
-* Go to ./application/config
-
-* Make a copy of database.default.php as database.php
-
-* Change the following settings -
-
-    + The hostname of the database server. Example:
-
-        ```php
-        $db['default']['hostname'] = 'localhost';
-        ```
-
-    + The username used to connect to the database. Example:
-
-        ````php
-        $db['default']['username'] = 'root';
-        ````
-
-    + The password used to connect to the database. Example:
-
-        ```php
-        $db['default']['password'] = 'root';
-        ```
-
-    + The name of the database. Example:
-
-        ```php
-        $db['default']['database'] = 'fcstuff';
-        ```
-
-    + The database type. Example:
-
-        ```php
-        $db['default']['dbdriver'] = 'mysql';
-        ```
-
-###General settings
-
-* Make a copy of project.default.php as project.php
-
-* Change the following settings -
-
-    + The website url. Example:
-
-        ```php
-        $config['base_url'] = 'http://example.com/';
-        ```
-
-    + The threshhold for logging error messages. Example:
-
-        ```php
-        $config['log_threshold'] = 0;
-        ```
-
-###Database Migrations
-
-* URL for running database migrations :
+* Grab a copy of the FCstuff repository.
 
     ```
-    http://example.com/migrations/
+    $ git clone https://github.com/abhijitrucks/fcstuff.git
     ```
 
-* URL for rolling back changes :
+* Enter the `config` directory.
 
     ```
-    http://example.com/migrations/rollback/
+    $ cd fcstuff/application/config
+    ```
+
+* Make a copy of `project.default.php` as `project.php`.
+
+    ```
+    $ cp project.default.php project.php
+    ```
+
+* Make a copy of `database.default.php` as `database.php`.
+
+    ```
+    $ cp database.default.php database.php
+    ```
+
+* Configure your project settings in `project.php`.
+
+* Configure your database settings in `database.php`.
+
+* Run the database migrations.
+
+    ```
+    $ curl http://localhost/fcstuff/migrations
     ```
 
 License
