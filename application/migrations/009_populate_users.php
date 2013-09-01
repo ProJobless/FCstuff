@@ -118,7 +118,20 @@ class Migration_Populate_users extends CI_Migration {
         // -------------------------
 
         $this->db->where('user_id', 6);
-        $this->db->set('type', 'deleted');
+        $this->db->set(array(
+            'password'           => NULL,
+            'reputation'         => 0,
+            'posts'              => 0,
+            'friends'            => 0,
+            'type'               => 'deleted',
+            'verification_key'   => NULL,
+            'recovery_key'       => NULL,
+            'unsubscription_key' => NULL,
+            'birthday'           => NULL,
+            'about_me'           => NULL,
+            'gender'             => NULL,
+            'profile_picture'    => NULL
+        ));
         $this->db->update('users');
 
         $this->load->helper('file');

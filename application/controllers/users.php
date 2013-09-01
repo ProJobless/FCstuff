@@ -631,11 +631,6 @@ class Users extends CI_Controller {
         $this->load->model('friend');
         $this->load->model('notification');
 
-        // Set user as 'deleted'.
-        $this->user->update($user['user_id'], array(
-            'type' => 'deleted'
-        ));
-
         // Delete content uploaded by the user.
         $this->load->helper('file');
         delete_files('user-content/' . $user['user_id'] .'/');
@@ -657,6 +652,21 @@ class Users extends CI_Controller {
 
         // Delete all notifications for the user.
         $this->notification->delete_all($user_id);
+
+        $this->user->update($user_id, array(
+            'password'           => NULL,
+            'reputation'         => 0,
+            'posts'              => 0,
+            'friends'            => 0,
+            'type'               => 'deleted',
+            'verification_key'   => NULL,
+            'recovery_key'       => NULL,
+            'unsubscription_key' => NULL,
+            'birthday'           => NULL,
+            'about_me'           => NULL,
+            'gender'             => NULL,
+            'profile_picture'    => NULL
+        ));
 
         // Logout user.
         logout();
