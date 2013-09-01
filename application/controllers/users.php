@@ -314,17 +314,17 @@ class Users extends CI_Controller {
      * Handle requests for recovering user accounts.
      *
      * @access   public
-     * @param    int      User id
-     * @param    string   Recovery key
      * @param    string
      */
-    public function recover($user_id = '', $recovery_key = '', $ajax = FALSE)
+    public function recover($ajax = FALSE)
     {
         log_access('users', 'recover');
 
         logout();
 
-        $password = $this->input->post('password');
+        $user_id      = $this->input->post('user_id');
+        $recovery_key = $this->input->post('recovery_key');
+        $password     = $this->input->post('password');
 
         if ($this->_recover($user_id, $recovery_key, $password))
         {
