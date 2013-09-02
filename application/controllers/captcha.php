@@ -39,8 +39,8 @@ class Captcha extends CI_Controller {
         imagettftext($image, 40, 0, 5, 40, $color, $font, $text);
 
         // Output image.
-        header("Content-type: image/png");
-        imagepng($image);
+        $this->output->set_content_type('image/png');
+        $this->output->set_output(imagepng($image));
         imagedestroy($image);
     }
 }
