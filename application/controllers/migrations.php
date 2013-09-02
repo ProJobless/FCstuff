@@ -36,7 +36,7 @@ class Migrations extends CI_Controller {
         // Migrate to latest version.
         if ($this->migration->latest())
         {
-            echo "Migrations successful.";    
+            $this->output->set_output('Migrations successful.');
         }
 
         // Else, show errors.
@@ -56,10 +56,10 @@ class Migrations extends CI_Controller {
     public function rollback()
     {
         $this->session->unset_userdata('user');
-        $this->input->set_cookie('token');
+        $this->input->set_cookie('token', '');
 
         $this->migration->version(0);
-        echo "Rollback successful.";
+        $this->output->set_output('Rollback successful.');
 
         proceed();
     }
