@@ -60,7 +60,15 @@ class Users extends CI_Controller {
         // Redirect if this isn't an AJAX request.
         if ( ! $ajax)
         {
-            proceed('/');
+            if ( ! $response['success'])
+            {
+                proceed('/#login');
+            }
+
+            else
+            {
+                proceed('/');
+            }
         }
 
         // Return a JSON array for AJAX requests.
