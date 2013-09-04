@@ -12,35 +12,28 @@ Requirements
 Getting Started
 ---------------
 
-* Grab a copy of the FCstuff repository.
+1. Grab a copy of the FCstuff repository.
 
     ```
     $ git clone https://github.com/abhijitrucks/fcstuff.git
     ```
 
-* Enter the `config` directory.
+2. Enter the `config` directory.
 
     ```
     $ cd fcstuff/application/config
     ```
 
-* Make a copy of `project.default.php` as `project.php`.
+3. Make copies of `project.default.php` and `database.default.php`.
 
     ```
     $ cp project.default.php project.php
-    ```
-
-* Make a copy of `database.default.php` as `database.php`.
-
-    ```
     $ cp database.default.php database.php
     ```
 
-* Configure your project settings in `project.php`.
+4. Configure your settings in `project.php` and `database.php`.
 
-* Configure your database settings in `database.php`.
-
-* Run the database migrations.
+5. Run the database migrations.
 
     ```
     $ curl http://localhost/fcstuff/migrations
