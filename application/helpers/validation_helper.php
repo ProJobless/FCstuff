@@ -66,6 +66,11 @@ if ( ! function_exists('is_valid'))
                     return FALSE;
                 }
 
+                if (is_numeric($content))
+                {
+                    return FALSE;
+                }
+
                 if (strlen($content) > 30)
                 {
                     return FALSE;
