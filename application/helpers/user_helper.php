@@ -31,6 +31,11 @@ if ( ! function_exists('generate_username'))
         $email = explode('@', $email);
         $username = $email[0];
 
+        if (is_numeric($username))
+        {
+            $username = $username . '_' . mt_rand();
+        }
+
         // Assume that the username is unique.
         $unique = TRUE;
 
@@ -45,7 +50,7 @@ if ( ! function_exists('generate_username'))
 
         while ( ! $unique)
         {
-            $tmp_username = $username . $i;
+            $tmp_username = $username . '_' . $i;
 
             if ($CI->user->read($tmp_username))
             {
