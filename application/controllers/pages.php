@@ -27,6 +27,23 @@ class Pages extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
+     * Display the landing page.
+     *
+     * @access   public
+     */
+    public function landing()
+    {
+        log_access('pages', 'landing');
+
+        if ( ! $this->session->userdata('user'))
+        {
+            $this->load->view('landing');
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Display user profile.
      *
      * @access   public

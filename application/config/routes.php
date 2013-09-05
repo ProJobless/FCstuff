@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = "welcome";
+$route['default_controller'] = "pages/landing";
 $route['404_override'] = '';
 $route['people/(:any)'] = "pages/profile/$1";
 

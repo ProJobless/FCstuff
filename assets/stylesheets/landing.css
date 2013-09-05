@@ -1,0 +1,235 @@
+/* HEADER */
+
+#header
+{
+    background-color: #D9042B;
+    height: 90px;
+    width: 100%;
+}
+
+#header h1
+{
+    color: #f7f7f7;
+    cursor: pointer;
+    float: left;
+    font-family: 'Tahoma', sans-serif;
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 90px;
+    padding-left: 25px;
+    text-shadow: 0px 1px 0px rgba(255,255,255,0.3), 0px -1px 0px rgba(0,0,0,0.7);
+    transition: color 0.25s;
+    -moz-transition: color 0.25s;
+    -o-transition: color 0.25s;
+    -webkit-transition: color 0.25s;
+}
+
+#header h1:hover
+{
+    color: #8E031C;
+}
+
+#header button
+{
+    background-color: #D9042B;
+    border: 2px solid #f7f7f7;
+    color: #f7f7f7;
+    cursor: pointer;
+    float: right;
+    font-weight: 700;
+    font-size: medium;
+    height: 35px;
+    margin: 27.5px 25px 27.5px 0;
+    padding: 0 20px;
+    transition: background-color 0.2s, color 0.2s;
+    -moz-transition: background-color 0.2s, color 0.2s;
+    -o-transition: background-color 0.2s, color 0.2s;
+    -webkit-transition: background-color 0.2s, color 0.2s;
+}
+
+#header button:hover
+{
+    background-color: #f7f7f7;
+    color: #D9042B;
+}
+
+
+/* CONTENT */
+
+#content h1
+{
+    color: #404040;
+    font-family: 'Tahoma', sans-serif;
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 50px;
+    text-align: center;
+}
+
+#content h1 span
+{
+    color: #D9042B;
+}
+
+#content form
+{
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+#content form input
+{
+    background-color: #ffffff;
+    border: 1px solid #cbcbcb;
+    font-size: large;
+    height: 25px;
+    margin-bottom: 20px;
+    padding: 10px;
+    text-align: left;
+    width: 456px;
+}
+
+#content form .error
+{
+    color: #D9042B;
+    font-family: sans-serif;
+    font-weight: 700;
+    padding: 5px 0;
+    text-align: left;
+    width: 480px;
+}
+
+#content form .captcha
+{
+    background-color: #ffffff;
+    border: 1px solid #cbcbcb;
+    height: 70px;
+    margin-left: 1px;
+    margin-bottom: -1px;
+    text-align: center;
+    width: 476px;
+}
+
+#content form img
+{
+    margin: 5px 0;
+}
+
+#content form button
+{
+    background-color: #D9042B;
+    border: 2px solid #D9042B;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: medium;
+    font-weight: 700;
+    height: 45px;
+    margin-top: 10px;
+    padding: 0 30px;
+    transition: background-color 0.2s, color 0.2s;
+    -moz-transition: background-color 0.2s, color 0.2s;
+    -o-transition: background-color 0.2s, color 0.2s;
+    -webkit-transition: background-color 0.2s, color 0.2s;
+}
+
+#content form button:hover
+{
+    background-color: #ffffff;
+    color: #D9042B;
+}
+
+
+/* OVERLAY */
+
+#overlay
+{
+    background-color: rgba(0, 0, 0, 0.9);
+    display: none;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+
+/* MODAL */
+
+#modal
+{
+    background-color: #f7f7f7;
+    display: none;
+    height: 350px;
+    left: 50%;
+    margin-left: -200px;
+    margin-top: -175px;
+    position: absolute;
+    top: 50%;
+    width: 400px;
+    z-index: 3;
+}
+
+#modal h2
+{
+    background-color: #D9042B;
+    color: #f7f7f7;
+    font-family: 'Tahoma', sans-serif;
+    font-size: xx-large;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 15px 0;
+    text-align: center;
+    width: 400px;
+}
+
+#modal form
+{
+    text-align: center;
+    margin: 20px;
+    width: 360px;
+}
+
+#modal form input[type="password"],
+#modal form input[type="text"]
+{
+    height: 25px;
+    font-size: medium;
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 330px;
+}
+
+#modal form label
+{
+    margin-bottom: 20px;
+    float: left;
+    font-family: sans-serif;
+    width: 100%;
+}
+
+#modal form button
+{
+    background-color: #D9042B;
+    border: 2px solid #D9042B;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: medium;
+    font-weight: 700;
+    height: 45px;
+    margin-top: 10px;
+    padding: 0 30px;
+    transition: background-color 0.2s, color 0.2s;
+    -moz-transition: background-color 0.2s, color 0.2s;
+    -o-transition: background-color 0.2s, color 0.2s;
+    -webkit-transition: background-color 0.2s, color 0.2s;
+}
+
+#modal form button:hover
+{
+    background-color: #ffffff;
+    color: #000000;
+}
