@@ -682,6 +682,8 @@ class Users extends CI_Controller {
         $this->notification->delete_all($user_id);
 
         $this->user->update($user_id, array(
+            'username'           => NULL,
+            'email'              => NULL,
             'password'           => NULL,
             'reputation'         => 0,
             'posts'              => 0,

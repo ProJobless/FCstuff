@@ -119,6 +119,8 @@ class Migration_Populate_users extends CI_Migration {
 
         $this->db->where('user_id', 6);
         $this->db->set(array(
+            'username'           => NULL,
+            'email'              => NULL,
             'password'           => NULL,
             'reputation'         => 0,
             'posts'              => 0,
