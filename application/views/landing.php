@@ -47,6 +47,7 @@
             <input name="identifier" id="identifier" type="text" placeholder="Email Address" autocomplete="off" required>
             <input name="password" id="password" type="password" placeholder="Password" autocomplete="off" required>
             <label><input name ="remember" id="remember" type="checkbox" checked> Remember me</label>
+            <?php echo ($this->session->flashdata('login_failed') ? "<div class='error'>The email or password you entered was incorrect.</div>" : ''); ?>
             <button>Login</button>
         </form>
     </div>

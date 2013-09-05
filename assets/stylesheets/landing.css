@@ -211,6 +211,14 @@
     width: 100%;
 }
 
+#modal form .error
+{
+    color: #D9042B;
+    font-family: sans-serif;
+    font-size: small;
+    margin-bottom: 5px;
+}
+
 #modal form button
 {
     background-color: #D9042B;
