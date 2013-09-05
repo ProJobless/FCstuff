@@ -108,14 +108,14 @@ class Posts extends CI_Controller {
         // Has the user uploaded an image with the post?
         if (isset($_FILES['image']))
         {
-            $file_name = md5(rand());
+            $file_name = md5(rand()) . '.jpg';
             $upload_path = './user-content/' . $user_id . '/';
 
             // Load the Upload library.
             $this->load->library('upload', array(
                 'upload_path'   => $upload_path,
                 'file_name'     => $file_name,
-                'allowed_types' => 'jpg|png|gif',
+                'allowed_types' => 'jpg|jpeg',
                 'max_size'      => '1024'
             ));
 

@@ -22,7 +22,7 @@ class Migration_Add_posts extends CI_Migration {
             "post_id INT(10) NOT NULL AUTO_INCREMENT",
             "user_id INT(10)",
             "content TEXT",
-            "image VARCHAR(32)",
+            "image VARCHAR(36)",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
             "modified BOOLEAN DEFAULT FALSE",
             "last_modified_timestamp TIMESTAMP",

@@ -22,7 +22,7 @@ class Migration_Add_notifications extends CI_Migration {
             "notification_id INT(10) NOT NULL AUTO_INCREMENT",
             "user_id INT(10)",
             "content VARCHAR(500)",
-            "image VARCHAR(32)",
+            "image VARCHAR(47)",
             "link VARCHAR(300)",
             "category VARCHAR(50)",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",

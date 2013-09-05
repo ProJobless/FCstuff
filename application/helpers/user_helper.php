@@ -94,7 +94,7 @@ if ( ! function_exists('generate_profile_picture'))
 
         // Save the image.
         $filename = md5($user_id . rand());
-        $location = 'user-content/' . $user_id . '/' . $filename . '.png';
+        $location = 'user-content/' . $user_id . '/' . $filename . '.jpg';
         imagepng($canvas, $location);
 
         // Return the filename.
