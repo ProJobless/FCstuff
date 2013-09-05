@@ -194,6 +194,10 @@ class Users extends CI_Controller {
      */
     private function _create($name, $email, $password, $captcha)
     {
+        // Set the name and email as temporary session variables.
+        $this->session->set_flashdata('name', $name);
+        $this->session->set_flashdata('email', $email);
+
         // Check if the name is valid.
         if ( ! is_valid('name', $name))
         {
