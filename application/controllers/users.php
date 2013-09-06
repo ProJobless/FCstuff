@@ -551,7 +551,7 @@ class Users extends CI_Controller {
                     return FALSE;
                 }
 
-                $file_name = md5(rand()) . '.jpg';
+                $file_name = md5(rand() * time()) . '.jpg';
                 $upload_path = './user-content/' . $user_id . '/';
 
                 // Load the Upload library.
@@ -568,10 +568,16 @@ class Users extends CI_Controller {
                     return FALSE;
                 }
 
+                $file_name = process_profile_picture($file_name);
+
                 // Update user data.
                 $this->user->update($user_id, array(
-                    'profile_picture' => generate_profile_picture($user_id)
+                    'profile_picture' => $file_name
                 ));
+
+                break;
+
+            // --------------------------------------------------------
 
             default:
 
