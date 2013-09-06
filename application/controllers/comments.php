@@ -124,17 +124,17 @@ class Comments extends CI_Controller {
         $this->notification->create(array(
             'user_id'  => $user['user_id'],
             'content'  => 'You got +2 reputation.',
-            'link'     => 'people/me',
-            'category' => 'reputation'
+            'image'    => '',
+            'link'     => 'people/me'
         ));
 
         if ( ! ($user['user_id'] == $post[0]['user_id']))
         {
             $this->notification->create(array(
                 'user_id'  => $post[0]['user_id'],
-                'content'  => $user['name'] . ' commented on your post : ' . $content,
-                'link'     => 'posts/' . $post[0]['post_id'],
-                'category' => 'comment'
+                'content'  => $user['name'] . ' added a new comment on your post : ' . $content,
+                'image'    => $user['user_id'] . '/' . $user['profile_picture'],
+                'link'     => 'posts/' . $post[0]['post_id']
             ));
         }
 

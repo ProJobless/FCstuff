@@ -24,8 +24,8 @@ class Migration_Populate_notifications extends CI_Migration {
                 $notification = array(
                     'user_id'  => $j,
                     'content'  => "This is sample notification $i for user $j.",
+                    'image'    => '',
                     'link'     => '',
-                    'category' => ''
                 );
                 $this->db->insert('notifications', $notification);
             }

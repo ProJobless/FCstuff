@@ -141,8 +141,8 @@ class Posts extends CI_Controller {
         $this->notification->create(array(
             'user_id'  => $user['user_id'],
             'content'  => 'You got +5 reputation.',
-            'link'     => 'people/me',
-            'category' => 'reputation'
+            'image'    => '',
+            'link'     => 'people/me'
         ));
 
         update_session_array();

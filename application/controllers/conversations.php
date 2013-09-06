@@ -126,8 +126,8 @@ class Conversations extends CI_Controller {
             $this->notification->create(array(
                 'user_id'  => $friend_user_id,
                 'content'  => $user['name'] . ' sent you a new message : ' . $message,
-                'link'     => 'conversations/' . $user_id,
-                'category' => 'conversation',
+                'image'    => $user['user_id'] . '/' . $user['profile_picture'],
+                'link'     => '/#conversations-' . $user_id
             ));
         }
 

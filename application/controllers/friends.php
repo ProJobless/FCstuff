@@ -107,7 +107,8 @@ class Friends extends CI_Controller {
         $this->notification->create(array(
             'user_id'  => $friend_user_id,
             'content'  => $user['name'] . ' wants to be your friend.',
-            'category' => 'friends'
+            'image'    => $user['user_id'] . '/' . $user['profile_picture'],
+            'link'     => 'people/' . $user['username']
         ));
 
         return TRUE;
@@ -193,15 +194,15 @@ class Friends extends CI_Controller {
         $this->notification->create(array(
             'user_id'  => $friend_user_id,
             'content'  => 'You are now friends with ' . $user['name'] . '.',
-            'link'     => 'people/' . $user['username'],
-            'category' => 'friends'
+            'image'    => $user['user_id'] . '/' . $user['profile_picture'],
+            'link'     => 'people/' . $user['username']
         ));
 
         $this->notification->create(array(
             'user_id'  => $user['user_id'],
             'content'  => 'You are now friends with ' . $friend[0]['name'] . '.',
-            'link'     => 'people/' . $friend[0]['username'],
-            'category' => 'friends'
+            'image'    => $friend[0]['user_id'] . '/' . $friend[0]['profile_picture'],
+            'link'     => 'people/' . $friend[0]['username']
         ));
 
         return TRUE;

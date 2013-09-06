@@ -253,15 +253,14 @@ class Users extends CI_Controller {
         $this->notification->create(array(
             'user_id'  => $user_id,
             'content'  => 'Thanks for joining FCstuff!',
-            'category' => 'welcome',
             'link'     => '/'
         ));
 
         $this->notification->create(array(
             'user_id'  => $user_id,
             'content'  => 'You got +50 reputation.',
-            'link'     => 'people/me',
-            'category' => 'reputation'
+            'image'    => '',
+            'link'     => 'people/me'
         ));
 
         // Login the user.

@@ -24,7 +24,6 @@ class Migration_Add_notifications extends CI_Migration {
             "content VARCHAR(500)",
             "image VARCHAR(47)",
             "link VARCHAR(300)",
-            "category VARCHAR(50)",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
             "seen BOOLEAN DEFAULT FALSE"
         ));

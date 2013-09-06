@@ -112,8 +112,7 @@ class Ratings extends CI_Controller {
             $this->notification->create(array(
                 'user_id'  => $user['user_id'],
                 'content'  => 'You got +' . $rating_score . ' reputation.',
-                'link'     => 'people/me',
-                'category' => 'reputation'
+                'link'     => 'people/me'
             ));
 
             if ( ! ($user['user_id'] == $post[0]['user_id']))
@@ -126,16 +125,16 @@ class Ratings extends CI_Controller {
                 $this->notification->create(array(
                     'user_id'  => $post[0]['user_id'],
                     'content'  => $user['name'] . ' gave your post a ' . $rating_score . ' star rating.',
-                    'link'     => 'posts/' . $post[0]['post_id'],
-                    'category' => 'rating'
+                    'image'    => $user['user_id'] . '/' . $user['profile_picture'],
+                    'link'     => 'posts/' . $post[0]['post_id']
                 ));
             }
 
             $this->notification->create(array(
                 'user_id'  => $post[0]['user_id'],
                 'content'  => 'You got +' . $rating_score . ' reputation.',
-                'link'     => 'people/me',
-                'category' => 'reputation'
+                'image'    => '',
+                'link'     => 'people/me'
             ));
         }
 
