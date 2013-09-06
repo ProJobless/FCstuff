@@ -93,8 +93,8 @@ if ( ! function_exists('generate_profile_picture'))
         imagecopy($canvas, $avatar, 0, 0, 0, 0, 320, 320);
 
         // Save the image.
-        $filename = md5($user_id . rand());
-        $location = 'user-content/' . $user_id . '/' . $filename . '.jpg';
+        $filename = md5(rand() * time()) . '.jpg';
+        $location = 'user-content/' . $user_id . '/' . $filename;
         imagepng($canvas, $location);
 
         // Return the filename.
