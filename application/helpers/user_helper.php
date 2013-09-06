@@ -104,6 +104,63 @@ if ( ! function_exists('generate_profile_picture'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('process_profile_picture'))
+{
+    /**
+     * Resize and crop a profile picture to 320px x 320px.
+     *
+     * @access   public
+     * @param    string   Filename of uploaded image
+     * @return   string   Filename of processed image
+     */
+    function process_profile_picture($filename)
+    {
+        $CI = get_instance();
+        $user = $CI->session->userdata('user');
+
+        $filepath = 'user-content/' . $user['user_id'] . '/' . $filename;
+
+        $image = imagecreatefromjpeg($filepath);
+
+        list($width, $height) = getimagesize($filepath);
+
+        // Wide images.
+        if ($width > $height)
+        {
+            $width = $height;
+            $cropped_image = imagecreatetruecolor($width, $height);
+            imagecopy($cropped_image, $image, 0, 0, 0, 0, $height, $height);
+        }
+
+        // Tall images.
+        elseif ($height > $width)
+        {
+            $height = $width;
+            $cropped_image = imagecreatetruecolor($width, $height);
+            imagecopy($cropped_image, $image, 0, 0, 0, 0, $width, $width);
+        }
+
+        // Square images.
+        else
+        {
+            $cropped_image = imagecreatetruecolor($width, $height);
+            imagecopy($cropped_image, $image, 0, 0, 0, 0, $width, $height);
+        }
+
+        $resized_image = imagecreatetruecolor(320, 320);
+        imagecopyresampled($resized_image, $cropped_image, 0, 0, 0, 0, 320, 320, $width, $height);
+
+        $filename = md5(rand() * time()) . '.jpg';
+        $filepath = 'user-content/' . $user['user_id'] . '/' . $filename;
+
+        imagejpeg($resized_image, $filepath, 90);
+
+        return $filename;
+    }
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('update_last_seen_timestamp'))
 {
     /**
