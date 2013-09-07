@@ -47,7 +47,6 @@ class Migration_Populate_users extends CI_Migration {
         $data['reputation']       = rand(0, 1000);
         $data['posts']            = rand(0, 1000);
         $data['friends']          = rand(0, 500);
-        $data['gender']           = 'm';
         $data['about_me']         = 'I am the awesome admin!';
         $data['type']             = 'admin';
         $data['profile_picture']  = generate_profile_picture(1);
@@ -77,13 +76,7 @@ class Migration_Populate_users extends CI_Migration {
             $data['posts']           = rand(0, 1000);
             $data['about_me']        = 'Hello! I am user' . $i . '!';
             $data['profile_picture'] = generate_profile_picture($i);
-            $data['gender']          = 'm';
             $data['verified']        = FALSE;
-
-            if ($i % 2 == 0)
-            {
-                $data['gender']      = 'f';
-            }
 
             $this->db->insert('users', $data);
         }
@@ -129,7 +122,6 @@ class Migration_Populate_users extends CI_Migration {
             'unsubscription_key' => NULL,
             'birthday'           => NULL,
             'about_me'           => NULL,
-            'gender'             => NULL,
             'profile_picture'    => NULL
         ));
         $this->db->update('users');

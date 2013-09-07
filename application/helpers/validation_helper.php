@@ -226,19 +226,6 @@ if ( ! function_exists('is_valid'))
 
             // ------------------------------------------------------------
 
-            case 'gender':
-
-                if ( ! ($content == 'm' OR $content == 'f'))
-                {
-                    $CI->session->set_flashdata('gender_invalid', TRUE);
-                    return FALSE;
-                }
-
-                return TRUE;
-                break;
-
-            // ------------------------------------------------------------
-
             case 'captcha':
 
                 if ($content != $CI->session->userdata('captcha'))

@@ -489,7 +489,6 @@ class Users extends CI_Controller {
             case 'name':
             case 'birthday':
             case 'about_me':
-            case 'gender':
 
                 if ( ! is_valid($content_type, $content))
                 {
@@ -697,7 +696,6 @@ class Users extends CI_Controller {
             'unsubscription_key' => NULL,
             'birthday'           => NULL,
             'about_me'           => NULL,
-            'gender'             => NULL,
             'profile_picture'    => NULL
         ));
 

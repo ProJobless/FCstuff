@@ -36,7 +36,6 @@ class Migration_Add_users extends CI_Migration {
             "unsubscription_key VARCHAR(32)",
             "birthday DATE",
             "about_me VARCHAR(500)",
-            "gender VARCHAR(1)",
             "profile_picture VARCHAR(36)",
             "last_seen TIMESTAMP"
         ));
