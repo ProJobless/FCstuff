@@ -18,6 +18,8 @@
     <script src="<?php echo base_url('assets/scripts/landing.js'); ?>"></script>
 </head>
 <body>
+    <?php $continue = ($this->input->get('continue') ? '?continue=' . $_GET['continue'] : '');?>
+
     <div id="header">
         <h1><a href="<?php echo base_url(); ?>">FCstuff</a></h1>
         <button tabindex="1" onclick="showLoginModal()">Login</button>
@@ -25,7 +27,7 @@
 
     <div id="content">
         <h1>Haven't joined <span>FCstuff</span> yet?</h1>
-        <form autocomplete="off" method="POST" action="<?php echo base_url('users/create'); ?>">
+        <form autocomplete="off" method="POST" action="<?php echo base_url('users/create') . $continue ?>">
             <?php echo ($this->session->flashdata('name_invalid') ? "<div class='error'>You can't use this name.</div>" : ''); ?>
             <input tabindex="2" name="name" type="text" placeholder="Your Name" autocomplete="off" value="<?php echo $this->session->flashdata('name'); ?>" required>
             <?php echo ($this->session->flashdata('email_invalid') ? "<div class='error'>You can't use this email address.</div>" : ''); ?>
@@ -43,7 +45,7 @@
 
     <div id="modal">
         <h2>Welcome back!</h2>
-        <form autocomplete="off" method="POST" action="<?php echo base_url('users/login'); ?>">
+        <form autocomplete="off" method="POST" action="<?php echo base_url('users/login') . $continue ?>">
             <input name="identifier" id="identifier" type="text" placeholder="Email Address" autocomplete="off" required>
             <input name="password" id="password" type="password" placeholder="Password" autocomplete="off" required>
             <label><input name ="remember" id="remember" type="checkbox" checked> Remember me</label>
