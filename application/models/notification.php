@@ -70,6 +70,11 @@ class Notification extends CI_Model {
             $this->db->where('notification_id >', $after);
             $this->db->limit(1);
         }
+        else
+        {
+            $this->db->order_by('notification_id', 'desc');
+            $this->db->limit(15);
+        }
         $query = $this->db->get();
 
         return $query->result_array();
