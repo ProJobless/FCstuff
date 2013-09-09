@@ -27,6 +27,75 @@ class Friends extends CI_Controller {
         authenticate_cookie();
         try_to_unban();
     }
+    // --------------------------------------------------------------------
+
+    /**
+     * Handle AJAX requests for displaying friends of a user.
+     *
+     * @access   public
+     */
+    public function read()
+    {
+        log_access('friends', 'read');
+
+        $user_id = $this->input->post('user_id');
+
+        $response = $this->_read($user_id);
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Return list of friends of a user.
+     *
+     * @access   private
+     * @param    int       User id
+     * @return   array
+     */
+    private function _read($user_id)
+    {
+        if ( ! $user_id)
+        {
+            if ($user = $this->session->userdata('user'))
+            {
+                $user_id = $user['user_id'];
+            }
+
+            else
+            {
+                $response['success'] = FALSE;
+                return $response;
+            }
+        }
+
+        if ( ! ($this->user->read($user_id)))
+        {
+            $response['success'] = FALSE;
+            return $response;
+        }
+
+        if ( ! $this->session->userdata('user'))
+        {
+            $friends = $this->friend->user($user_id, TRUE);
+        }
+
+        else
+        {
+            $friends = $this->friend->user($user_id);
+        }
+
+        if (count($friends) < 1)
+        {
+            $response['success'] = FALSE;
+            return $response;
+        }
+
+        $response['success'] = TRUE;
+        $response['friends'] = $friends;
+
+        return $response;
+    }
 
     // --------------------------------------------------------------------
 
