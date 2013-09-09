@@ -30,6 +30,55 @@ class Notifications extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
+     * Handle AJAX requests for displaying notifications.
+     *
+     * @access   public
+     */
+    public function read()
+    {
+        log_access('notifications', 'read');
+
+        $before = $this->input->post('before');
+        $after = $this->input->post('after');
+
+        $response = $this->_read($before, $after);
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Return notifications for a user.
+     *
+     * @access   private
+     * @param    int
+     * @param    int
+     */
+    private function _read($before = FALSE, $after = FALSE)
+    {
+        if ( ! ($user = $this->session->userdata('user')))
+        {
+            $response['success'] = FALSE;
+            return $response;
+        }
+
+        $notifications = $this->notification->user($user['user_id'], $before, $after);
+
+        if (count($notifications) < 1)
+        {
+            $response['success'] = FALSE;
+            return $response;
+        }
+
+        $response['success'] = TRUE;
+        $response['notifications'] = $notifications;
+
+        return $response;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Handle requests for deleting notifications.
      *
      * @access   public
