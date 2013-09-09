@@ -38,6 +38,8 @@ if ( ! function_exists('log_access'))
             'ip_address' => $ip_address,
             'user_agent' => $user_agent
         ));
+
+        update_last_seen_timestamp();
     }
 }
 
