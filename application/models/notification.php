@@ -59,14 +59,16 @@ class Notification extends CI_Model {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('notifications');
         $this->db->select('notification_id, user_id, content, image, link, timestamp, seen');
-        $this->db->order_by('notification_id', 'desc');
-        $this->db->limit(15);
         $this->db->where('user_id', $user_id);
         if ($before) {
+            $this->db->order_by('notification_id', 'desc');
             $this->db->where('notification_id <', $before);
+            $this->db->limit(15);
         }
         elseif ($after) {
+            $this->db->order_by('notification_id', 'asc');
             $this->db->where('notification_id >', $after);
+            $this->db->limit(1);
         }
         $query = $this->db->get();
 
