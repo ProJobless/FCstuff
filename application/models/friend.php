@@ -53,20 +53,20 @@ class Friend extends CI_Model {
      *
      * @access   public
      * @param    int
-     * @param    int
+     * @param    bool
      * @return   array
      */
-    public function user($user_id, $last_relationship_id = FALSE)
+    public function user($user_id, $public = FALSE)
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('friends');
-        $this->db->select('relationship_id, user_id, friend_id, status, timestamp');
-        $this->db->limit(1);
-        $this->db->where('user_id', $user_id);
-        $this->db->where('friend_id', $friend_id);
-        if ($last_relationship_id) {
-            $this->db->where('relationship_id <', $last_relationship_id);
+        $this->db->join('users', 'users.user_id = friends.friend_id');
+        $this->db->select('relationship_id, friends.user_id, friends.friend_id, friends.status, users.username, users.name, users.last_seen');
+        if ($public) {
+            $this->db->where('friends.status', 'friends');
         }
+        $this->db->where('friends.user_id', $user_id);
+        $this->db->order_by('relationship_id', 'desc');
         $query = $this->db->get();
 
         return $query->result_array();
