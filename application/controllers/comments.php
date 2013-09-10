@@ -132,7 +132,7 @@ class Comments extends CI_Controller {
         {
             $this->notification->create(array(
                 'user_id'  => $post[0]['user_id'],
-                'content'  => $user['name'] . ' added a new comment on your post : ' . $content,
+                'content'  => substr($user['name'] . ' added a new comment on your post : ' . $content, 0, 500),
                 'image'    => $user['user_id'] . '/' . $user['profile_picture'],
                 'link'     => 'posts/' . $post[0]['post_id']
             ));
