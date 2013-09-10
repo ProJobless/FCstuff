@@ -23,7 +23,7 @@ class Migration_Add_conversations extends CI_Migration {
             "user_id INT(10)",
             "friend_id INT(10)",
             "type VARCHAR(10)",
-            "message TEXT",
+            "message MEDIUMTEXT",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
             "seen BOOLEAN DEFAULT FALSE"
         ));

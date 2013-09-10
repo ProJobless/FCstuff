@@ -22,7 +22,7 @@ class Migration_Add_comments extends CI_Migration {
             "comment_id INT(10) NOT NULL AUTO_INCREMENT",
             "post_id INT(10)",
             "user_id INT(10)",
-            "content TEXT",
+            "content MEDIUMTEXT",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
             "modified BOOLEAN DEFAULT FALSE",
             "last_modified_timestamp TIMESTAMP",

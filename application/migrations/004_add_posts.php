@@ -21,7 +21,7 @@ class Migration_Add_posts extends CI_Migration {
         $this->dbforge->add_field(array(
             "post_id INT(10) NOT NULL AUTO_INCREMENT",
             "user_id INT(10)",
-            "content TEXT",
+            "content MEDIUMTEXT",
             "image VARCHAR(36)",
             "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
             "modified BOOLEAN DEFAULT FALSE",
