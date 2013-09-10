@@ -28,8 +28,8 @@ class Migration_Populate_users extends CI_Migration {
         $data['recovery_key']       = md5(rand());
         $data['verification_key']   = md5(rand());
         $data['unsubscription_key'] = md5(rand());
-        $data['birthday']           = date('Y-m-d H:i:s', strtotime("-18 year"));
-        $data['last_seen']          = date('Y-m-d H:i:s');
+        $data['birthday']           = gmdate('Y-m-d H:i:s', strtotime("-18 year"));
+        $data['last_seen']          = gmdate('Y-m-d H:i:s');
 
         // -------------------------
         // Create admin user
