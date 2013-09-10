@@ -61,7 +61,7 @@ class Friend extends CI_Model {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('friends');
         $this->db->join('users', 'users.user_id = friends.friend_id');
-        $this->db->select('relationship_id, friends.user_id, friends.friend_id, friends.status, users.username, users.name, users.last_seen');
+        $this->db->select('relationship_id, friends.user_id, friends.friend_id, friends.status, users.username, users.name, users.last_seen, users.profile_picture');
         if ($public) {
             $this->db->where('friends.status', 'friends');
         }
