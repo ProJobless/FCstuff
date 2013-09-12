@@ -83,6 +83,24 @@ class Notification extends CI_Model {
     // --------------------------------------------------------------------
 
     /**
+     * Mark all notifications for a user as seen.
+     *
+     * @access   public
+     * @param    int
+     */
+    public function seen($user_id)
+    {
+        $data = array(
+            'seen' => TRUE
+        );
+
+        $this->db->where('user_id', $user_id);
+        $this->db->update('notifications', $data);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Delete notification.
      *
      * @access   public
