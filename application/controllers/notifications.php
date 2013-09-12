@@ -64,6 +64,8 @@ class Notifications extends CI_Controller {
 
         $notifications = $this->notification->user($user['user_id'], $before, $after);
 
+        $this->notification->seen($user['user_id']);
+
         if (count($notifications) < 1)
         {
             $response['success'] = FALSE;
