@@ -40,7 +40,6 @@
 
 $route['default_controller'] = "pages/landing";
 $route['404_override'] = '';
-$route['people/(:any)'] = "pages/profile/$1";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
