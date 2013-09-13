@@ -55,6 +55,28 @@ class Conversation extends CI_Model {
     // --------------------------------------------------------------------
 
     /**
+     * Return new messages for a user.
+     *
+     * @access   public
+     * @param    int
+     * @return   array
+     */
+    public function unread($user_id)
+    {
+        $this->db->query("SET time_zone = '+00:00'");
+        $this->db->from('conversations');
+        $this->db->join('users', 'users.user_id = conversations.friend_id');
+        $this->db->select('conversations.friend_id, users.name, users.profile_picture, conversations.message');
+        $this->db->where('conversations.user_id', $user_id);
+        $this->db->where('conversations.seen', FALSE);
+        $query = $this->db->get();
+
+        return $query->result_array();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Mark all messages for a user as seen.
      *
      * @access   public
