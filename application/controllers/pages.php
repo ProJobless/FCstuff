@@ -39,6 +39,44 @@ class Pages extends CI_Controller {
         {
             $this->load->view('landing');
         }
+
+        else
+        {
+            $this->main();
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Display content using the main template.
+     *
+     * @access   public
+     * @param    string
+     */
+    public function main()
+    {
+        log_access('pages', 'main');
+
+        if ($user = $this->session->userdata('user'))
+        {
+            $this->load->view('main_template', array(
+                'title' => 'FCstuff',
+                'description' => '',
+                'user' => $user,
+                'json' => array(
+                    'global' => json_encode(array(
+                        'base_url' => base_url()
+                    )),
+                    'user' => json_encode($user)
+                )
+            ));
+        }
+
+        else
+        {
+            $this->landing();
+        }
     }
 }
 
