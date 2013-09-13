@@ -32,6 +32,58 @@ class Conversations extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
+     * Handle AJAX requests for displaying conversations.
+     *
+     * @access   public
+     */
+    public function read()
+    {
+        log_access('conversations', 'read');
+
+        $friend_id = $this->input->post('friend_user_id');
+        $before = $this->input->post('before');
+        $after = $this->input->post('after');
+
+        $response = $this->_read($friend_id, $before, $after);
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Return conversation between 2 users.
+     *
+     * @access   private
+     * @param    int
+     * @param    int
+     * @param    int
+     * @return   array
+     */
+    private function _read($friend_id, $before, $after)
+    {
+        if ( ! ($user = $this->session->userdata('user')))
+        {
+            $response['success'] = FALSE;
+            return $response;
+        }
+
+        $conversation = $this->conversation->read($user['user_id'], $friend_id, $before, $after);
+
+        if (count($conversation) < 1)
+        {
+            $response['success'] = FALSE;
+            return $response;
+        }
+
+        $response['success'] = TRUE;
+        $response['conversation'] = $conversation;
+
+        return $response;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Handle AJAX requests for displaying unread messages.
      *
      * @access   public
