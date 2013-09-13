@@ -32,6 +32,53 @@ class Conversations extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
+     * Handle AJAX requests for displaying unread messages.
+     *
+     * @access   public
+     */
+    public function unread()
+    {
+        log_access('conversations', 'unread');
+
+        $response = $this->_unread();
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Return unread messages.
+     *
+     * @access   private
+     * @return   array
+     */
+    private function _unread()
+    {
+        if ( ! ($user = $this->session->userdata('user')))
+        {
+            $response['success'] = FALSE;
+            return $response;
+        }
+
+        $messages = $this->conversation->unread($user['user_id']);
+
+        $this->conversation->seen($user['user_id']);
+
+        if (count($messages) < 1)
+        {
+            $response['success'] = FALSE;
+            return $response;
+        }
+
+        $response['success'] = TRUE;
+        $response['messages'] = $messages;
+
+        return $response;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Handle requests for sending a message.
      *
      * @access   public
