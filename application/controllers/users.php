@@ -28,6 +28,68 @@ class Users extends CI_Controller {
     // --------------------------------------------------------------------
 
     /**
+     * Handle AJAX requests for displaying user data.
+     *
+     * @access   public
+     * @param    string
+     */
+    public function read($identifier = '')
+    {
+        log_access('users', 'read');
+
+        if ($identifier == 'me' && $user = $this->session->userdata('user'))
+        {
+            $identifier = $user['user_id'];
+        }
+
+        if ($user = $this->_read($identifier))
+        {
+            $response['success'] = TRUE;
+            $response['user']    = $user;
+        }
+
+        else
+        {
+            $response['success'] = FALSE;
+        }
+
+        // Output a JSON array for AJAX requests.
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Return data about a user.
+     *
+     * @access   private
+     * @param    string    User identifier
+     * @return   array
+     */
+    private function _read($identifier)
+    {
+        // Does the user exist?
+        if ( ! ($user = $this->user->read($identifier)))
+        {
+            return FALSE;
+        }
+
+        // Remove sensitive information.
+        unset($user[0]['password']);
+        unset($user[0]['verification_key']);
+        unset($user[0]['recovery_key']);
+        unset($user[0]['unsubscribed']);
+        unset($user[0]['unsubscription_key']);
+        unset($user[0]['verification_key']);
+        unset($user[0]['timestamp']);
+        unset($user[0]['email']);
+        unset($user[0]['last_seen']);
+
+        return $user[0];
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Handle an authentication request.
      *
      * @access   public
