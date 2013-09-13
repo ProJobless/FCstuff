@@ -253,7 +253,7 @@ class Users extends CI_Controller {
         $this->notification->create(array(
             'user_id'  => $user_id,
             'content'  => 'Welcome to FCstuff. Make a new post to get started.',
-            'link'     => '/'
+            'link'     => ''
         ));
 
         $this->notification->create(array(

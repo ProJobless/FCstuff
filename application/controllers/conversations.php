@@ -117,20 +117,6 @@ class Conversations extends CI_Controller {
             'message'   => $message
         ));
 
-        $friend_last_seen = strtotime($friend[0]['last_seen']);
-        $current_time     = strtotime(gmdate('Y-m-d H:i:s'));
-        $diff             = $current_time - $friend_last_seen;
-
-        if ($diff > 40)
-        {
-            $this->notification->create(array(
-                'user_id'  => $friend_user_id,
-                'content'  => substr($user['name'] . ' sent you a new message : ' . $message, 0, 500),
-                'image'    => $user['user_id'] . '/' . $user['profile_picture'],
-                'link'     => '/#conversations-' . $user_id
-            ));
-        }
-
         return TRUE;
     }
 }
