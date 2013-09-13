@@ -68,7 +68,7 @@ class Notification extends CI_Model {
         elseif ($after) {
             $this->db->order_by('notification_id', 'asc');
             $this->db->where('notification_id >', $after);
-            $this->db->limit(1);
+            $this->db->limit(15);
         }
         else
         {
