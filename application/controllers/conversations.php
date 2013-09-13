@@ -154,6 +154,7 @@ class Conversations extends CI_Controller {
             'user_id'   => $user_id,
             'friend_id' => $friend_user_id,
             'type'      => 'sent',
+            'seen'      => TRUE,
             'message'   => $message
         ));
 
