@@ -22,15 +22,16 @@ class Migration_Populate_conversations extends CI_Migration {
             // User
             for ($j = 3; $j <= 6; $j++)
             {
-                $message = "This message is sent to user $j by user 2.";
+                $message = "This message " . $i . "is sent to user $j by user 2.";
                 $this->db->insert('conversations', array(
                     'user_id'    => 2,
                     'friend_id'  => $j,
                     'type'       => 'sent',
+                    'seen'       => TRUE,
                     'message'    => $message
                 ));
 
-                $message = "This message from user 2 is received by user $j.";
+                $message = "This message " . $i . " from user 2 is received by user $j.";
                 $this->db->insert('conversations', array(
                     'user_id'    => $j,
                     'friend_id'  => 2,
