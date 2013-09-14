@@ -109,6 +109,10 @@ function showConversation()
     $('#aside').animate({
         left: '310px'
     }, 250);
+
+    $("#content-wrapper").animate({
+        'margin-left': '560px'
+    }, 250);
 }
 
 function hideConversation()
@@ -122,6 +126,10 @@ function hideConversation()
 
     $('#aside').animate({
         left: '0'
+    }, 250);
+
+    $('#content-wrapper').animate({
+        'margin-left': '250px'
     }, 250);
 }
 
