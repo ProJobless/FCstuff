@@ -23,9 +23,72 @@ class Posts extends CI_Controller {
         $this->load->model('user');
         $this->load->model('post');
         $this->load->model('notification');
+        $this->load->model('rating');
 
         authenticate_cookie();
         try_to_unban();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Handle AJAX requests for displaying feed.
+     *
+     * @access   public
+     */
+    public function feed()
+    {
+        log_access('posts', 'feed');
+
+        $last_post_id = $this->input->post('last_post_id');
+
+        $feed = $this->_feed($last_post_id);
+
+        if (count($feed) == 0)
+        {
+            $response['success'] = FALSE;
+        }
+
+        else
+        {
+            $response['success'] = TRUE;
+            $response['feed']    = $feed;
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    /**
+     * Return feed.
+     *
+     * @access   private
+     * @param    int       Last post id
+     * @return   array
+     */
+    private function _feed($last_post_id)
+    {
+        $feed_array = $this->post->feed($last_post_id);
+
+        $user_id = FALSE;
+        if ($user = $this->session->userdata('user'))
+        {
+            $user_id = $user['user_id'];
+        }
+
+        for ($i = 0; $i < count($feed_array); $i++)
+        {
+            $post_id = $feed_array[$i]['post_id'];
+            $rating_array = $this->rating->read($post_id, $user_id);
+            $rating = '0';
+            if (count($rating_array) > 0)
+            {
+                $rating = $rating_array[0]['rating'];
+            }
+            $feed_array[$i]['rating'] = $rating;
+        }
+
+        return $feed_array;
     }
 
     // --------------------------------------------------------------------
