@@ -53,22 +53,32 @@ class Pages extends CI_Controller {
      *
      * @access   public
      * @param    string
+     * @param    string
      */
-    public function main()
+    public function main($content_type = 'feed', $content_id = FALSE)
     {
         log_access('pages', 'main');
 
         if ($user = $this->session->userdata('user'))
         {
+            unset($user['password']);
+            unset($user['timestamp']);
+            unset($user['verification_key']);
+            unset($user['recovery_key']);
+            unset($user['unsubscription_key']);
+
+            $global = array(
+                'base_url'     => base_url(),
+                'content_type' => $content_type,
+                'content_id'   => $content_id
+            );
+
             $this->load->view('main_template', array(
                 'title' => 'FCstuff',
-                'description' => '',
-                'user' => $user,
-                'json' => array(
-                    'global' => json_encode(array(
-                        'base_url' => base_url()
-                    )),
-                    'user' => json_encode($user)
+                'user'  => $user,
+                'json'  => array(
+                    'global' => json_encode($global),
+                    'user'   => json_encode($user)
                 )
             ));
         }

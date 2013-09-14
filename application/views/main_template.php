@@ -6,7 +6,7 @@
 
     <title><?php echo $title; ?></title>
 
-    <meta name="description" content="<?php echo $description; ?>">
+    <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
     <link rel="shortcut icon" href="<?php echo base_url('favicon.ico?ver=1'); ?>">
