@@ -40,7 +40,17 @@ $(document).ready(function(){
             return false;
          }
     });
-    
+
+    switch(global_json.content_type) {
+        case 'feed':
+            fetchFeed();
+    }
+});
+
+$(window).scroll(function() {
+    if($(window).scrollTop() + $(window).height() == $(document).height()) {
+        fetchFeed(true);
+    }
 });
 
 function showDropdown()
@@ -220,4 +230,24 @@ function sendMessage()
         'friend_user_id' : friend_id,
         'message' : message
     });
+}
+
+function fetchFeed(update)
+{
+    if (update) {
+        last_post_id = $('#content .feed .post:last').attr('data-post-id');
+    } else {
+        last_post_id = null;
+    };
+
+    var url = global_json.base_url + 'posts/feed';
+    $.post(url, {'last_post_id' : last_post_id}, function(response){
+        if (response.success == true) {
+            $('#content .loader').remove();
+            renderFeed(response, update);
+            $('#content').append("<div class='loader'>Loading more posts &hellip;");
+        } else {
+            $('#content').append("<div class='loader'>There are no more posts &hellip;");
+        }
+    }, "json");
 }
