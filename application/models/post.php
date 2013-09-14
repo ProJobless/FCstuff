@@ -83,7 +83,8 @@ class Post extends CI_Model {
     {
         $this->db->query("SET time_zone = '+00:00'");
         $this->db->from('posts');
-        $this->db->select('post_id, user_id, content, image, timestamp, modified, last_modified_timestamp, comments, last_comment_timestamp, rating_score, rating_count');
+        $this->db->join('users', 'users.user_id = posts.user_id');
+        $this->db->select('post_id, posts.user_id, users.name, users.profile_picture, content, image, posts.timestamp, modified, last_modified_timestamp, comments, last_comment_timestamp, rating_score, rating_count');
         $this->db->order_by('post_id', 'desc');
         $this->db->limit(15);
         if ($last_post_id) {
