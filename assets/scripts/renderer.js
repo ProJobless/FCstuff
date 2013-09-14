@@ -94,28 +94,30 @@ function renderConversation(friendJSON, response, more)
 {
     $('#conversation .top h2').html(friendJSON.user.name);
 
-    if (more) {
-        lastMessageId = $('#conversation .messages .message:first-child').attr('data-message-id');
-        for (var i = 0; i < response.conversation.length; i++) {
-            message = response.conversation[i];
+    if (response.success == true) {
+        if (more) {
+            lastMessageId = $('#conversation .messages .message:first-child').attr('data-message-id');
+            for (var i = 0; i < response.conversation.length; i++) {
+                message = response.conversation[i];
 
-            prepMessage(message);
+                prepMessage(message);
 
-            $('#conversation .messages').prepend(html);
-            $('#conversation').nanoScroller({ scrollTo: $("#conversation .messages .message[data-message-id='" + lastMessageId + "']").prev() });
+                $('#conversation .messages').prepend(html);
+                $('#conversation').nanoScroller({ scrollTo: $("#conversation .messages .message[data-message-id='" + lastMessageId + "']").prev() });
+            };
+
+        } else {
+            $('#conversation .messages').html('');
+            for (var i = response.conversation.length; i > 0; i--) {
+                message = response.conversation[i-1];
+
+                prepMessage(message);
+
+                $('#conversation .messages').append(html);
+
+            };
         };
-
-    } else {
-        $('#conversation .messages').html('');
-        for (var i = response.conversation.length; i > 0; i--) {
-            message = response.conversation[i-1];
-
-            prepMessage(message);
-
-            $('#conversation .messages').append(html);
-            
-        };
-    };
+    }
 }
 
 function prepMessage(message)
