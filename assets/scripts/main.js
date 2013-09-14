@@ -48,7 +48,7 @@ $(document).ready(function(){
 });
 
 $(window).scroll(function() {
-    if($(window).scrollTop() + $(window).height() == $(document).height()) {
+    if($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
         fetchFeed(true);
     }
 });
@@ -238,6 +238,7 @@ function fetchFeed(update)
         last_post_id = $('#content .feed .post:last').attr('data-post-id');
     } else {
         last_post_id = null;
+        $('#content').html('').append("<div class='loader'>Loading &hellip;").append("<div class='feed'></div>");
     };
 
     var url = global_json.base_url + 'posts/feed';
@@ -247,6 +248,7 @@ function fetchFeed(update)
             renderFeed(response, update);
             $('#content').append("<div class='loader'>Loading more posts &hellip;");
         } else {
+            $('#content .loader').remove();
             $('#content').append("<div class='loader'>There are no more posts &hellip;");
         }
     }, "json");
