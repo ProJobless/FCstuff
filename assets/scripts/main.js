@@ -180,9 +180,7 @@ function fetchConversation(user_id, more)
         
         var url = global_json.base_url + 'conversations/read/';
         $.post(url, {'friend_user_id' : user_id, before : lastMessageId}, function(response){
-            if (response.success == true) {
-                renderConversation(friendJSON, response, more);
-            }
+            renderConversation(friendJSON, response, more);
         }, "json");
     }, "json");
 }
