@@ -26,14 +26,14 @@ function renderFriends(response)
 
             $('#chat .online .item').attr('title', 'Online');
             $('#chat .offline .item').attr('title', 'Offline');
-        };
 
-        friendsCount += 1;
-
-        if (friendsCount < 1) {
-            $('#chat p.information').show().html("You don't have any friends yet &hellip;");
+            friendsCount += 1;
         };
     }; 
+
+    if (friendsCount < 1) {
+        $('#chat p.information').show().html("You don't have any friends yet &hellip;");
+    };
 }
 
 function renderNotifications(response, update)
