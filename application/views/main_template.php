@@ -64,5 +64,10 @@
             <textarea placeholder="Write your message and press enter &hellip;"></textarea>
         </div>
     </div>
+    <div id="content-wrapper">
+        <div id="content">
+            <div class="loader">Loading &hellip;</div>
+        </div>
+    </div>
 </body>
 </html>

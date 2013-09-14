@@ -560,3 +560,26 @@
     margin-top: 10px;
     width: 0;
 }
+
+
+/*** CONTENT ***/
+
+#content-wrapper
+{
+    margin-left: 250px;
+    padding: 55px 0 10px 0;
+}
+
+#content
+{
+    margin: 0 auto;
+    max-width: 640px;
+    min-width: 400px;
+    width: 90%;
+}
+
+#content .loader
+{
+    padding-top: 10px;
+    text-align: center;
+}
